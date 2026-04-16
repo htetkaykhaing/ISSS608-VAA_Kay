@@ -2,12 +2,12 @@ project:
   type: website
 
 website:
-  title: "ISSS608-VAA_demo"
+  title: "ISSS608-VAA_Htet_Kay_Khaing"
   navbar:
     left: 
     - text: "Hands-on Exercise"
       menu:
-      - text: "Hands-on Exercise 1"
+      - text: "Hands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods"
         href: "HoE1.html"
     right:
       - href: index.qmd
