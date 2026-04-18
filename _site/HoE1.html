@@ -249,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 17, 2026</p>
+      <p class="date-modified">April 18, 2026</p>
     </div>
   </div>
     
@@ -364,8 +364,14 @@ Important
 </section>
 <section id="grammar-of-graphics" class="level2">
 <h2 class="anchored" data-anchor-id="grammar-of-graphics">1.4 Grammar of Graphics</h2>
-<p>Before we getting started using ggplot2, it is important for us to understand the principles of Grammer of Graphics.</p>
-<p>Grammar of Graphics is a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. It was introduced by Leland Wilkinson (1999) <strong>Grammar of Graphics</strong>, Springer. There are two principles in Grammar of Graphics, they are: - Graphics = distinct layers of grammatical elements - Meaningful plots through aesthetic mapping A good grammar of graphics will allow us to gain insight into the composition of complicated graphics, and reveal unexpected connections between seemingly different graphics (Cox 1978). It also provides a strong foundation for understanding a diverse range of graphics. Furthermore, it may also help guide us on what a well-formed or correct graphic looks like, but there will still be many grammatically correct but nonsensical graphics.</p>
+<p>Before we getting started using ggplot2, it is important for us to understand the principles of Grammar of Graphics.</p>
+<p>Grammar of Graphics is a general scheme for data visualization which breaks up graphs into semantic components such as scales and layers. It was introduced by Leland Wilkinson (1999) <strong>Grammar of Graphics</strong>, Springer.</p>
+<p>There are two principles in Grammar of Graphics, they are:</p>
+<ul>
+<li>Graphics = distinct layers of grammatical elements</li>
+<li>Meaningful plots through aesthetic mapping</li>
+</ul>
+<p>A good grammar of graphics will allow us to gain insight into the composition of complicated graphics, and reveal unexpected connections between seemingly different graphics (Cox 1978). It also provides a strong foundation for understanding a diverse range of graphics. Furthermore, it may also help guide us on what a well-formed or correct graphic looks like, but there will still be many grammatically correct but nonsensical graphics.</p>
 <section id="a-layered-grammar-of-graphics" class="level3">
 <h3 class="anchored" data-anchor-id="a-layered-grammar-of-graphics">A Layered Grammar of Graphics</h3>
 <p>ggplot2 is an implementation of Leland Wilkinson’s Grammar of Graphics. Figure below shows the seven grammars of ggplot2. <img src="images/HoE1_3.jpg" class="img-fluid" alt="Reference: Hadley Wickham (2010) “A layered grammar of graphics.” Journal of Computational and Graphical Statistics, vol.&nbsp;19, no. 1, pp.&nbsp;3–28."> A short description of each building block are as follows:</p>
@@ -446,10 +452,24 @@ Note
 </section>
 <section id="essential-grammatical-elements-in-ggplot2-geom" class="level2">
 <h2 class="anchored" data-anchor-id="essential-grammatical-elements-in-ggplot2-geom">1.7 Essential Grammatical Elements in ggplot2: geom</h2>
-<p>Geometric objects are the actual marks we put on a plot. Examples include: - <em>geom_point</em> for drawing individual points (e.g., a scatter plot) - <em>geom_line</em> for drawing lines (e.g., for a line charts) - <em>geom_smooth</em> for drawing smoothed lines (e.g., for simple trends or approximations) - <em>geom_bar</em> for drawing bars (e.g., for bar charts) - <em>geom_histogram</em> for drawing binned values (e.g.&nbsp;a histogram) - <em>geom_polygon</em> for drawing arbitrary shapes - <em>geom_map</em> for drawing polygons in the shape of a map! (You can access the data to use for these maps by using the map_data() function). <img src="images/HoE1_4.jpg" class="img-fluid"> - A plot must have at least one geom; there is no upper limit. You can add a geom to a plot using the + operator. - For complete list, please refer to <a href="https://ggplot2.tidyverse.org/reference/#section-layer-geoms">here</a>.</p>
+<p>Geometric objects are the actual marks we put on a plot. Examples include:</p>
+<ul>
+<li><em>geom_point</em> for drawing individual points (e.g., a scatter plot)</li>
+<li><em>geom_line</em> for drawing lines (e.g., for a line charts)</li>
+<li><em>geom_smooth</em> for drawing smoothed lines (e.g., for simple trends or approximations)</li>
+<li><em>geom_bar</em> for drawing bars (e.g., for bar charts)</li>
+<li><em>geom_histogram</em> for drawing binned values (e.g.&nbsp;a histogram)</li>
+<li><em>geom_polygon</em> for drawing arbitrary shapes</li>
+<li><em>geom_map</em> for drawing polygons in the shape of a map! (You can access the data to use for these maps by using the map_data() function).</li>
+</ul>
+<p><img src="images/HoE1_4.jpg" class="img-fluid"></p>
+<ul>
+<li>A plot must have at least one geom; there is no upper limit. You can add a geom to a plot using the + operator.</li>
+<li>For complete list, please refer to <a href="https://ggplot2.tidyverse.org/reference/#section-layer-geoms">here</a>.</li>
+</ul>
 <section id="geometric-objects-geom_bar" class="level3">
 <h3 class="anchored" data-anchor-id="geometric-objects-geom_bar">1.7.1 Geometric Objects: geom_bar</h3>
-<p>The code chunk below plots a bar chart by using <code>[geom_bar()](https://ggplot2.tidyverse.org/reference/geom_bar.html)</code>.</p>
+<p>The code chunk below plots a bar chart by using <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html"><code>geom_bar()</code></a>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span>RACE)) <span class="sc">+</span></span>
@@ -466,7 +486,7 @@ Note
 <section id="geometric-objects-geom_dotplot" class="level3">
 <h3 class="anchored" data-anchor-id="geometric-objects-geom_dotplot">1.7.2 Geometric Objects: geom_dotplot</h3>
 <p>In a dot plot, the width of a dot corresponds to the bin width (or maximum width, depending on the binning algorithm), and dots are stacked, with each dot representing one observation.</p>
-<p>In the code chunk below, <code>[geom_dotplot()](https://ggplot2.tidyverse.org/reference/geom_dotplot.html)</code> of ggplot2 is used to plot a dot plot.</p>
+<p>In the code chunk below, <a href="https://ggplot2.tidyverse.org/reference/geom_dotplot.html"><code>geom_dotplot()</code></a> of ggplot2 is used to plot a dot plot.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
@@ -502,7 +522,11 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The code chunk below performs the following two steps: - <code>scale_y_continuous()</code> is used to turn off the y-axis, and - <em>binwidth argument</em> is used to change the binwidth to 2.5.</p>
+<p>The code chunk below performs the following two steps:</p>
+<ul>
+<li><code>scale_y_continuous()</code> is used to turn off the y-axis, and</li>
+<li><em>binwidth argument</em> is used to change the binwidth to 2.5.</li>
+</ul>
 </div>
 </div>
 <div class="cell">
@@ -552,7 +576,12 @@ Note
 </section>
 <section id="modifying-a-geometric-object-by-changing-geom" class="level3">
 <h3 class="anchored" data-anchor-id="modifying-a-geometric-object-by-changing-geom">1.7.4 Modifying a geometric object by changing <code>geom()</code></h3>
-<p>In the code chunk below, - <em>bins</em> argument is used to change the number of bins to 20, - <em>fill</em> argument is used to shade the histogram with light blue color, and - <em>color</em> argument is used to change the outline colour of the bars in black</p>
+<p>In the code chunk below,</p>
+<ul>
+<li><em>bins</em> argument is used to change the number of bins to 20,</li>
+<li><em>fill</em> argument is used to shade the histogram with light blue color, and</li>
+<li><em>color</em> argument is used to change the outline colour of the bars in black</li>
+</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>exam_data, </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x=</span> MATHS)) <span class="sc">+</span></span>
@@ -952,7 +981,14 @@ Note
 </section>
 <section id="essential-grammatical-elements-in-ggplot2-themes" class="level2">
 <h2 class="anchored" data-anchor-id="essential-grammatical-elements-in-ggplot2-themes">1.11 Essential Grammatical Elements in ggplot2: themes</h2>
-<p>Themes control elements of the graph not related to the data. For example: - background colour - size of fonts - gridlines - colour of labels Built-in themes include: - <code>theme_gray()</code> (default) - <code>theme_bw()</code> - <code>theme_classic()</code></p>
+<p>Themes control elements of the graph not related to the data. For example:</p>
+<ul>
+<li>background colour</li>
+<li>size of fonts</li>
+<li>gridlines</li>
+<li>colour of labels Built-in themes include:</li>
+<li><code>theme_gray()</code> (default) - <code>theme_bw()</code> - <code>theme_classic()</code></li>
+</ul>
 <p>A list of theme can be found at this <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">link</a>. Each theme element can be conceived of as either a line (e.g.&nbsp;x-axis), a rectangle (e.g.&nbsp;graph background), or text (e.g.&nbsp;axis title).</p>
 <section id="working-with-theme" class="level3">
 <h3 class="anchored" data-anchor-id="working-with-theme">1.11.1 Working with theme</h3>
