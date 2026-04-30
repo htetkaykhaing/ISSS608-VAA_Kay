@@ -2,8 +2,15 @@
 title: "About"
 ---
 
-About this site
+### About the Author
 
-```{r}
-1 + 1
-```
+Hello, Thank you for visiting KayVerse. I’m **Htet Kay Khaing**.
+
+I am currently **Postgraduate Student from Master of IT in Business (Data Science and Analytics) at Singapore Management University**. This portfolio reflects my progress in applying visual analytics methods to explore data, communicate insights clearly, and design more effective visualisations.
+
+
+### Connect with Me
+
+- **Email:** [htetkaykhaing@gmail.com](htetkaykhaing@gmail.com)
+- **LinkedIn:** [https://www.linkedin.com/in/htetkay-khaing/](https://www.linkedin.com/in/htetkay-khaing/)
+- **GitHub:** [https://github.com/htetkaykhaing](https://github.com/htetkaykhaing)

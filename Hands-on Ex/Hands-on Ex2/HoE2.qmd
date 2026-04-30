@@ -69,15 +69,16 @@ p1 <- ggplot(data = exam_data,
   ggtitle("English scores versus Maths scores for Primary 3")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p1
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
        aes(x= MATHS, 
            y=ENGLISH)) +
@@ -93,10 +94,9 @@ ggplot(data=exam_data,
 ```
 :::
 
-[**ggrepel**](https://ggrepel.slowkow.com/)  is an extension of **ggplot2** package which provides `geoms` for **ggplot2** to repel overlapping text.
+[**ggrepel**](https://ggrepel.slowkow.com/) is an extension of **ggplot2** package which provides `geoms` for **ggplot2** to repel overlapping text.
 
-![](images/HoE2_1.jpg)
-We simply replace `geom_text()` by [`geom_text_repel()`](https://ggrepel.slowkow.com/reference/geom_text_repel.html) and `geom_label()` by [`geom_label_repel`](https://ggrepel.slowkow.com/reference/geom_text_repel.html).
+![](img/HoE2_1.jpg) We simply replace `geom_text()` by [`geom_text_repel()`](https://ggrepel.slowkow.com/reference/geom_text_repel.html) and `geom_label()` by [`geom_label_repel`](https://ggrepel.slowkow.com/reference/geom_text_repel.html).
 
 ### 2.3.1 Working with ggrepel
 
@@ -114,15 +114,16 @@ p2 <- ggplot(data=exam_data,
   ggtitle("English scores versus Maths scores for Primary 3")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p2
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
        aes(x= MATHS, 
            y=ENGLISH)) +
@@ -138,6 +139,7 @@ ggplot(data=exam_data,
 :::
 
 ## 2.4 Beyond ggplot2 Themes
+
 ggplot2 comes with eight [built-in themes](https://ggplot2.tidyverse.org/reference/ggtheme.html), they are: `theme_gray()`, `theme_bw()`, `theme_classic()`, `theme_dark()`, `theme_light()`, `theme_linedraw()`, `theme_minimal()`, and `theme_void()`.
 
 ```{r, echo=FALSE}
@@ -151,15 +153,16 @@ p3 <- ggplot(data=exam_data,
   ggtitle("Distribution of Maths scores") 
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p3
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
              aes(x = MATHS)) +
   geom_histogram(bins=20, 
@@ -174,6 +177,7 @@ ggplot(data=exam_data,
 Refer to this [link](https://ggplot2.tidyverse.org/reference/index.html#themes) to learn more about ggplot2 `Themes`
 
 ### 2.4.1 Working with ggtheme package
+
 [**ggthemes**](https://cran.r-project.org/web/packages/ggthemes/index.html) provides [‘ggplot2’ themes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/) that replicate the look of plots by Edward Tufte, Stephen Few, [Fivethirtyeight](https://fivethirtyeight.com/), [The Economist](https://www.economist.com/graphic-detail), ‘Stata’, ‘Excel’, and [The Wall Street Journal](https://www.pinterest.com/wsjgraphics/wsj-graphics/), among others.
 
 In the example below, *The Economist* theme is used.
@@ -189,15 +193,16 @@ p4 <- ggplot(data=exam_data,
   theme_economist()
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p4
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
              aes(x = MATHS)) +
   geom_histogram(bins=20, 
@@ -212,6 +217,7 @@ ggplot(data=exam_data,
 It also provides some extra geoms and scales for ‘ggplot2’. Consult [this vignette](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/) to learn more.
 
 ### 2.4.2 Working with hrbthems package
+
 [**hrbrthemes**](https://cran.r-project.org/web/packages/hrbrthemes/index.html) package provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.
 
 ```{r, echo=FALSE}
@@ -225,15 +231,16 @@ p5 <- ggplot(data=exam_data,
   theme_ipsum()
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p5
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
              aes(x = MATHS)) +
   geom_histogram(bins=20, 
@@ -260,15 +267,16 @@ p6 <- ggplot(data=exam_data,
               grid = "Y")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p6
 ```
 
 ## The code
 
-```r
+``` r
 ggplot(data=exam_data, 
              aes(x = MATHS)) +
   geom_histogram(bins=20, 
@@ -289,6 +297,7 @@ ggplot(data=exam_data,
 :::
 
 ## 2.5 Beyond Single Graph
+
 It is not unusual that multiple graphs are required to tell a compelling visual story. There are several ggplot2 extensions provide functions to compose figure with multiple graphs. In this section, you will learn how to create composite plot by combining multiple graphs. First, let us create three statistical graphics by using the code chunk below.
 
 ```{r, echo=FALSE}
@@ -302,15 +311,16 @@ p7 <- ggplot(data=exam_data,
   ggtitle("Distribution of Maths scores")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p7
 ```
 
 ## The code
 
-```r
+``` r
 p7 <- ggplot(data=exam_data, 
              aes(x = MATHS)) +
   geom_histogram(bins=20, 
@@ -323,6 +333,7 @@ p7 <- ggplot(data=exam_data,
 :::
 
 Next
+
 ```{r, echo=FALSE}
 p8 <- ggplot(data=exam_data, 
              aes(x = ENGLISH)) +
@@ -334,15 +345,16 @@ p8 <- ggplot(data=exam_data,
   ggtitle("Distribution of English scores")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p8
 ```
 
 ## The code
 
-```r
+``` r
 p8 <- ggplot(data=exam_data, 
              aes(x = ENGLISH)) +
   geom_histogram(bins=20, 
@@ -355,6 +367,7 @@ p8 <- ggplot(data=exam_data,
 :::
 
 Lastly, we will draw a scatterplot for English score versus Maths score by as shown below
+
 ```{r, echo=FALSE}
 p9 <- ggplot(data=exam_data, 
              aes(x= MATHS, 
@@ -367,15 +380,16 @@ p9 <- ggplot(data=exam_data,
   ggtitle("English scores versus Maths scores for Primary 3")
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p9
 ```
 
 ## The code
 
-```r
+``` r
 p9 <- ggplot(data=exam_data, 
              aes(x= MATHS, 
                  y=ENGLISH)) +
@@ -388,7 +402,8 @@ p9 <- ggplot(data=exam_data,
 ```
 :::
 
-### 2.5.1 Creating Composite Graphics: pathwork methods 
+### 2.5.1 Creating Composite Graphics: pathwork methods
+
 There are several ggplot2 extension’s functions support the needs to prepare composite figure by combining several graphs such as [`grid.arrange()`](https://cran.r-project.org/web/packages/gridExtra/vignettes/arrangeGrob.html) of **gridExtra** package and [`plot_grid()`](https://wilkelab.org/cowplot/reference/plot_grid.html) of [**cowplot**](https://wilkelab.org/cowplot/index.html) package. In this section, I am going to shared an ggplot2 extension called [**patchwork**](https://patchwork.data-imaginist.com/) which is specially designed for combining separate ggplot2 graphs into a single figure.
 
 Patchwork package has a very simple syntax where we can create layouts super easily. Here’s the general syntax that combines:
@@ -398,44 +413,49 @@ Patchwork package has a very simple syntax where we can create layouts super eas
 -   Two-Row Layout using the Division Sign `/`
 
 ### 2.5.2 Combining two ggplot2 graphs
+
 Figure in the tabset below shows a composite of two histograms created using patchwork. Note how simple the syntax used to create the plot!
 
 ```{r, echo=FALSE}
 p10 <- p7 + p8
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
+
 ```{r, echo=FALSE}
 p10
 ```
 
 ## The code
 
-```r
+``` r
 p7 + p8
 ```
 :::
 
 ### 2.5.3 Combining three ggplot2 graphs
+
 We can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:
 
 -   “/” operator to stack two ggplot2 graphs,
--   “|” operator to place the plots beside each other,
+-   “\|” operator to place the plots beside each other,
 -   “()” operator the define the sequence of the plotting.
 
 ```{r, echo=FALSE}
 p11 <- p7 / p8 | p9
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
-``` {r, echo=FALSE}
+
+```{r, echo=FALSE}
 p11
 ```
 
 ## The code
-```r
+
+``` r
 p7 / p8 | p9
 ```
 :::
@@ -443,6 +463,7 @@ p7 / p8 | p9
 To learn more about, refer to [Plot Assembly](https://patchwork.data-imaginist.com/articles/guides/assembly.html).
 
 ### 2.5.4 Creating a composite figure with tag
+
 In order to identify subplots in text, **patchwork** also provides auto-tagging capabilities as shown in the figure below.
 
 ```{r, echo=FALSE}
@@ -450,20 +471,23 @@ p12 <- ((p7 / p8) | p9) +
   plot_annotation(tag_levels = 'I')
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
-``` {r, echo=FALSE}
+
+```{r, echo=FALSE}
 p12
 ```
 
 ## The code
-```r
+
+``` r
 ((p7 / p8) | p9) + 
   plot_annotation(tag_levels = 'I')
 ```
 :::
 
 ### 2.5.5 Creating figure with insert
+
 Beside providing functions to place plots next to each other based on the provided layout. With [`inset_element()`](https://patchwork.data-imaginist.com/reference/inset_element.html) of **patchwork**, we can place one or several plots or graphic elements freely on top or below another plot.
 
 ```{r, echo=FALSE}
@@ -474,14 +498,16 @@ p13 <- p9 + inset_element(p8,
                    top = 1)
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
-``` {r, echo=FALSE}
+
+```{r, echo=FALSE}
 p13
 ```
 
 ## The code
-```r
+
+``` r
 p9 + inset_element(p8, 
                    left = 0.02, 
                    bottom = 0.7, 
@@ -491,26 +517,30 @@ p9 + inset_element(p8,
 :::
 
 ### 2.5.6 Creating a composite figure by using patchwork and ggtheme
+
 Figure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.
 
 ```{r, echo=FALSE}
 patchwork <- (p7 / p8) | p9
 ```
 
-::: {.panel-tabset}
+::: panel-tabset
 ## The plot
-``` {r, echo=FALSE}
+
+```{r, echo=FALSE}
 patchwork & theme_economist()
 ```
 
 ## The code
-```r
+
+``` r
 patchwork <- (p7 / p8) | p9
 patchwork & theme_economist()
 ```
 :::
 
 ## 2.6 Reference
+
 -   [Patchwork R package goes nerd viral](https://www.littlemissdata.com/blog/patchwork)
 -   [ggrepel](https://ggrepel.slowkow.com/)
 -   [ggthemes](https://ggplot2.tidyverse.org/reference/ggtheme.html)
