@@ -8,9 +8,11 @@ website:
     - text: "Hands-on Exercise"
       menu:
       - text: "Hands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods"
-        href: "HoE1.html"
+        href: "HoEx/HoEx1/HoE1.html"
       - text: "Hands-on Exercise 2 - Beyond ggplot2 Fundamentals"
-        href: "HoE2.html"
+        href: "HoEx/HoEx2/HoE2.html"
+      - text: "Hands-on Exercise 3a: Programming Interactive Data Visualisation with R"
+        href: "HoEx/HoEx3/HoE3a.html"
     right:
       - href: index.qmd
         text: Home
