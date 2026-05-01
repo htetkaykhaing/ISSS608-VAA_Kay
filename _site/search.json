@@ -585,6 +585,6 @@
     "href": "HoEx/HoEx3/HoE3b.html#reference",
     "title": "Hands-on Exercise 3b: Programming Animated Statistical Graphics with R",
     "section": "3.5 Reference",
-    "text": "3.5 Reference\n\nGetting Started\nVisit this [link]https://rpubs.com/raymondteo/dataviz8) for a very interesting implementation of gganimate by your senior.\nBuilding an animation step-by-step with gganimate.\nCreating a composite gif with multiple gganimate panels"
+    "text": "3.5 Reference\n\nGetting Started\nVisit this link for a very interesting implementation of gganimate by your senior.\nBuilding an animation step-by-step with gganimate.\nCreating a composite gif with multiple gganimate panels"
   }
 ]
