@@ -13,6 +13,8 @@ website:
         href: "HoEx/HoEx2/HoE2.html"
       - text: "Hands-on Exercise 3a: Programming Interactive Data Visualisation with R"
         href: "HoEx/HoEx3/HoE3a.html"
+      - text: "Hands-on Exercise 3b: Programming Animated Statistical Graphics with R"
+        href: "HoEx/HoEx3/HoE3b.html"
     right:
       - href: index.qmd
         text: Home
