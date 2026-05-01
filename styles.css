@@ -1,1 +1,53 @@
 /* css styles */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+body,
+p,
+li,
+div,
+span {
+  font-family: "Quicksand", Sans-Serif;
+  /*background-color: #fff9fc;*/
+  color: #5c4b51;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Quicksand", Sans-Serif;
+  color: #d46a92;
+  font-weight: 700;
+}
+
+a {
+  color: #e75480;
+}
+
+a:hover {
+  color: #c7436b;
+}
+
+.navbar {
+  background-color: #ffd9e8;
+}
+
+.navbar a,
+.navbar-brand {
+  color: #7a4b5d !important;
+  font-weight: 600;
+}
+
+.sidebar,
+.toc {
+  background-color: #fff4f8;
+}
+
+.callout-tip {
+  border-left: 4px solid #f4a6c1;
+}
+
+.callout-note {
+  border-left: 4px solid #cdb4db;
+}
+
+.callout-warning {
+  border-left: 4px solid #f6bd60;
+}
