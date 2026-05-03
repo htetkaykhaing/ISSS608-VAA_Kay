@@ -15,6 +15,8 @@ website:
         href: "HoEx/HoEx3/HoE3a.html"
       - text: "Hands-on Exercise 3b: Programming Animated Statistical Graphics with R"
         href: "HoEx/HoEx3/HoE3b.html"
+      - text: "Hands-on Exercise 4a: Visualising Distribution"
+        href: "HoEx/HoEx4/HoE4a.html"
     right:
       - href: index.qmd
         text: Home

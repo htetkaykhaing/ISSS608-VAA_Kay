@@ -1,0 +1,49 @@
+---
+title: "Hands-on Exercise 4a: Visualising Distribution"
+author: "Htet Kay Khaing"
+date: "May 2, 2026"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+## 4.1 Learning outcomes
+In this chapter, we will explore two newer methods for visualising distributions, namely the **ridgeline plot** and **raincloud plot**, using **ggplot2** and its extensions. These build on earlier techniques introduced in Chapter 1, such as the histogram, density plot, boxplot, notch plot, and violin plot.
+
+## 4.2 Getting Started
+### .2.1 Installing and loading the packages
+For the purpose of this exercise, the following R packages will be used, they are:
+
+- ggridges, a ggplot2 extension specially designed for plotting ridgeline plots,
+- ggdist, a ggplot2 extension specially design for visualising distribution and uncertainty,
+- tidyverse, a family of R packages to meet the modern data science and visual communication needs,
+- ggthemes, a ggplot extension that provides the user additional themes, scales, and geoms for the ggplots package, and
+- colorspace, an R package provides a broad toolbox for selecting individual colors or color palettes, manipulating these colors, and employing them in various kinds of visualisations.
+
+The code chunk below will be used load these R packages into RStudio environment.
+
+```{r}
+pacman::p_load(ggdist, ggridges, ggthemes,
+               colorspace, tidyverse)
+```
+
+### 4.2.2 Data import
+For the purpose of this exercise, *Exam_data.csv* will be used.
+
+In the code chunk below, [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) of [**readr**](https://readr.tidyverse.org/) package is used to import *Exam_data.csv* into R and saved it into a tibble data.frame.
+
+```{r}
+exam <- read_csv("data/Exam_data.csv")
+```
+
+
+
+
+
+
+
+
+
