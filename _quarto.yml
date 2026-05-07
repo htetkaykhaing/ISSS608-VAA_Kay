@@ -19,6 +19,8 @@ website:
         href: "HoEx/HoEx4/HoE4a.html"
       - text: "Hands-on Exercise 4b: Visual Statistical Analysis"
         href: "HoEx/HoEx4/HoE4b.html"
+      - text: "Hands-on Exercise 4c: Visualising Uncertainty"
+        href: "HoEx/HoEx4/HoE4c.html"
     right:
       - href: index.qmd
         text: Home
