@@ -1,18 +1,18 @@
-/* css styles */
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap');
 
+/* main text */
 body,
 p,
 li,
 div,
 span {
-  font-family: "Quicksand", Sans-Serif;
-  /*background-color: #fff9fc;*/
+  font-family: "Asap", sans-serif;
   color: #5c4b51;
 }
 
+/* headings */
 h1, h2, h3, h4 {
-  font-family: "Quicksand", Sans-Serif;
+  font-family: "Asap", sans-serif;
   color: #d46a92;
   font-weight: 700;
 }

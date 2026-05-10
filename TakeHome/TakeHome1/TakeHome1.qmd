@@ -1,0 +1,15 @@
+---
+title: "Take-home Exercise 1"
+author: "Htet Kay Khaing"
+date: "May 7, 2026"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+```{r}
+data <- read.csv("data/Dataset of motor insurance portfolio.csv")
+```
