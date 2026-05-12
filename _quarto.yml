@@ -27,6 +27,8 @@ website:
         href: "HoEx/HoEx5/HoE5a.qmd"
       - text: "Hands-on Exercise 5b: Visual Correlation Analysis"
         href: "HoEx/HoEx5/HoE5b.qmd"
+      - text: "Hands-on Exercise 5c: Visual Multivariate Analysis with Heatmap"
+        href: "HoEx/HoEx5/HoE5c.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
