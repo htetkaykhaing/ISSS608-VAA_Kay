@@ -31,6 +31,8 @@ website:
         href: "HoEx/HoEx5/HoE5c.qmd"
       - text: "Hands-on Exercise 5d: Visual Multivariate Analysis with Parallel Coordinates Plot"
         href: "HoEx/HoEx5/HoE5d.qmd"
+      - text: "Hands-on Exercise 5e: Treemap Visualisation with R"
+        href: "HoEx/HoEx5/HoE5e.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
