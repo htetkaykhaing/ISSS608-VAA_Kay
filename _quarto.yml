@@ -44,6 +44,7 @@ website:
 
 format:
   html:
+    embed-resources: true
     theme: minty
     css: styles.css
     toc: true

@@ -21,7 +21,7 @@ Motor insurance portfolios usually contain many policies with no claims and a sm
 
 For this report, **profitability** is measured mainly using `underwriting_result`, `underwriting_margin` and `loss_ratio`. **Volatility** is examined using claim occurrence, claim frequency, the spread of loss ratio and upper-tail loss ratio behaviour.
 
-::: callout-note
+::: {.callout-note}
 The analysis is exploratory. The statistical tests validate whether observed differences are unlikely to be random, but they do not prove direct causality. Business interpretation is still required because the dataset is observational.
 :::
 
@@ -63,8 +63,6 @@ motor_raw <- read_delim(
 ### 4.2 Data overview
 
 ```{r, echo=FALSE}
-#| label: data-overview
-
 overview_tbl <- tibble(
   metric = c(
     "Number of records",
@@ -150,7 +148,7 @@ ggplot(
   missing_plot_tbl,
   aes(x = missing_pct, y = variable)
 ) +
-  geom_col(fill = "#4E79A7") +
+  geom_col(fill = "#e75480") +
   geom_text(
     aes(label = percent(missing_pct, accuracy = 0.01)),
     hjust = -0.1,
@@ -297,7 +295,7 @@ Histograms are suitable for identifying skewness, zero inflation and long-tail b
 ```{r}
 #| code-fold: true
 p1 <- ggplot(motor, aes(x = total_premium)) +
-  geom_histogram(bins = 45, fill = "#4E79A7", colour = "white") +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
   scale_x_continuous(labels = label_number()) +
   labs(
     title = "Total premium",
@@ -306,7 +304,7 @@ p1 <- ggplot(motor, aes(x = total_premium)) +
   )
 
 p2 <- ggplot(motor, aes(x = total_incurred)) +
-  geom_histogram(bins = 45, fill = "#4E79A7", colour = "white") +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
   scale_x_continuous(labels = label_number()) +
   labs(
     title = "Total incurred claims",
@@ -315,7 +313,7 @@ p2 <- ggplot(motor, aes(x = total_incurred)) +
   )
 
 p3 <- ggplot(motor, aes(x = loss_ratio_capped)) +
-  geom_histogram(bins = 45, fill = "#4E79A7", colour = "white") +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
   scale_x_continuous(labels = label_number()) +
   labs(
     title = "Loss ratio, capped at 99th percentile",
@@ -324,7 +322,7 @@ p3 <- ggplot(motor, aes(x = loss_ratio_capped)) +
   )
 
 p4 <- ggplot(motor, aes(x = underwriting_result)) +
-  geom_histogram(bins = 45, fill = "#4E79A7", colour = "white") +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
   scale_x_continuous(labels = label_number()) +
   labs(
     title = "Underwriting result",
@@ -342,34 +340,15 @@ The distributions show that the financial variables are highly skewed. Most reco
 #| code-fold: true
 
 p5 <- ggplot(motor, aes(x = driver_age)) +
-  geom_histogram(bins = 40, fill = "#59A14F", colour = "white") +
-  scale_x_continuous(labels = label_number()) +
+  geom_histogram(bins = 40, fill = "#e75480", colour = "white") +
   labs(
     title = "Driver age",
     x = "Driver age",
     y = "Number of records"
   )
 
-p6 <- ggplot(motor, aes(x = vehicle_age)) +
-  geom_histogram(bins = 40, fill = "#59A14F", colour = "white") +
-  scale_x_continuous(labels = label_number()) +
-  labs(
-    title = "Vehicle age",
-    x = "Vehicle age",
-    y = "Number of records"
-  )
-
-p7 <- ggplot(motor, aes(x = age_driving_licence)) +
-  geom_histogram(bins = 40, fill = "#59A14F", colour = "white") +
-  scale_x_continuous(labels = label_number()) +
-  labs(
-    title = "Driving licence age",
-    x = "Driving licence age",
-    y = "Number of records"
-  )
-
-p8 <- ggplot(motor, aes(x = vehicle_value)) +
-  geom_histogram(bins = 40, fill = "#59A14F", colour = "white") +
+p6 <- ggplot(motor, aes(x = vehicle_value)) +
+  geom_histogram(bins = 40, fill = "#e75480", colour = "white") +
   scale_x_continuous(labels = label_number()) +
   labs(
     title = "Vehicle value",
@@ -377,27 +356,195 @@ p8 <- ggplot(motor, aes(x = vehicle_value)) +
     y = "Number of records"
   )
 
-p9 <- ggplot(motor, aes(x = power_to_weight_ratio)) +
-  geom_histogram(bins = 40, fill = "#59A14F", colour = "white") +
-  scale_x_continuous(labels = label_number()) +
-  labs(
-    title = "Power-to-weight ratio",
-    x = "Power-to-weight ratio",
-    y = "Number of records"
-  )
-
-p5 + p6 + p7 + p8 + p9
+p5 + p6 
 ```
 
+From the plot, we can say that most drivers are *middle-aged*, while vehicle value is highly skewed, meaning most vehicles have *lower values*, with only a small number of very high-value vehicles.
 
+### 5.3 Distribution of Claim Count
+Because claim count is a discrete numerical variable, a bar chart is more suitable than a histogram.
 
+```{r}
+#| code-fold: true
+claims_tbl <- mutate(
+  motor,
+  claims_group = if_else(total_claims >= 4, "4+", as.character(total_claims))
+)
 
+claims_tbl <- count(claims_tbl, claims_group)
 
+claims_tbl <- mutate(
+  claims_tbl,
+  claims_group = factor(claims_group, levels = c("0", "1", "2", "3", "4+")),
+  pct = n / sum(n)
+)
 
+ggplot(claims_tbl, aes(x = claims_group, y = pct)) +
+  geom_col(fill = "#e75480") +
+  geom_text(
+    aes(label = percent(pct, accuracy = 0.1)),
+    vjust = -0.4,
+    size = 3.5
+  ) +
+  scale_y_continuous(
+    labels = percent,
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title = "Percentage of Claims",
+    x = "Total claims per record",
+    y = "Share of records"
+  )
+```
 
+Most records did not make any claims, showing that claims are uncommon in the portfolio. This also explains portfolio risk is driven by the smaller number of records with claims.
 
+### 5.4 Categorical portfolio composition
+Bar charts are suitable for categorical variables because they show how portfolio volume is distributed across policy, status, business and payment frequency categories.
 
+::: {.panel-tabset}
+## Policy Type
+```{r}
+#| code-fold: true
+policy_tbl <- count(motor, policy_type)
+policy_tbl <- mutate(policy_tbl, pct = n / sum(n))
 
+p_policy <- ggplot(policy_tbl, aes(x = n, y = fct_reorder(policy_type, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Policy type",
+    x = "Number of records",
+    y = NULL
+  )
+p_policy
+```
+**CC (Third-party liability)** is the dominant category, making up **57.8%** of records, followed by **COMP_E (comprehensive with excess)** at **25.8%**. The portfolio is mainly concentrated in these two product types.
+
+## Policy Status
+```{r}
+#| code-fold: true
+status_tbl <- count(motor, policy_status)
+status_tbl <- mutate(status_tbl, pct = n / sum(n))
+
+p_status <- ggplot(status_tbl, aes(x = n, y = fct_reorder(policy_status, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Policy status",
+    x = "Number of records",
+    y = NULL
+  )
+p_status
+```
+Most records are active policies, accounting for **89.2%**. Although cancelled policies only accounts for **10.8%**, they should still be checked because it may affect profitability.
+
+## Business Type
+```{r}
+#| code-fold: true
+business_tbl <- count(motor, business_type)
+business_tbl <- mutate(business_tbl, pct = n / sum(n))
+
+p_business <- ggplot(business_tbl, aes(x = n, y = fct_reorder(business_type, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Business type",
+    x = "Number of records",
+    y = NULL
+  )
+p_business
+```
+New business records make up **69.3%**. This suggests that the portfolio is more heavily driven by new policy transactions.
+
+## Payment Frequency
+```{r}
+#| code-fold: true
+payment_tbl <- count(motor, payment_frequency)
+payment_tbl <- mutate(payment_tbl, pct = n / sum(n))
+
+p_payment <- ggplot(payment_tbl, aes(x = n, y = fct_reorder(payment_frequency, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Payment frequency",
+    x = "Number of records",
+    y = NULL
+  )
+p_payment
+```
+**Annual** payment is the most common at **81.3%**. **Semi-annual** and **quarterly** payments are much smaller groups, but they maybe still useful for analysis because payment behaviour can be related to customer profile and profitability.
+:::
+
+## 6. Objective 2: Bivariate Visual Analytics
+This section applies suitable bivariate visual analytics techniques to investigate factors influencing portfolio profitability and volatility. Statistical validation is included to check whether the visual differences are supported by formal tests.
+
+### 6.1 Profitability and volatility over time
+```{r}
+#| code-fold: true
+year_perf <- group_by(motor, year)
+
+year_perf <- summarise(
+  year_perf,
+  total_premium = sum(total_premium, na.rm = TRUE),
+  total_incurred = sum(total_incurred, na.rm = TRUE),
+  loss_ratio = total_incurred / total_premium
+)
+
+ggplot(year_perf, aes(x = year, y = loss_ratio)) +
+  geom_col(fill = "#e75480") +
+  geom_text(
+    aes(label = percent(loss_ratio, accuracy = 0.1)),
+    vjust = -0.4,
+    size = 3.5
+  ) +
+  scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Portfolio loss ratio by year",
+    x = "Year",
+    y = "Loss ratio"
+  )
+```
+The portfolio remained profitable across all three years because the loss ratio stayed below 100%. However, the loss ratio increased in 2024, suggesting that profitability weakened compared with 2022 and 2023.
+
+::: {.callout-note}
+A higher loss ratio means weaker profitability.
+:::
+
+### 6.2 Policy type as a profitability driver
+```{r}
+#| code-fold: true
+policy_perf <- group_by(motor, policy_type)
+
+policy_perf <- summarise(
+  policy_perf,
+  records = n(),
+  premium = sum(total_premium, na.rm = TRUE),
+  incurred = sum(total_incurred, na.rm = TRUE),
+  loss_ratio = incurred / premium
+)
+
+ggplot(policy_perf, aes(x = loss_ratio, y = reorder(policy_type, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(
+    aes(label = percent(loss_ratio, accuracy = 0.1)),
+    hjust = -0.1,
+    size = 3
+  ) +
+  scale_x_continuous(
+    labels = percent,
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title = "Loss ratio by policy type",
+    x = "Loss ratio",
+    y = "Policy type"
+  )
+```
 
 
 
