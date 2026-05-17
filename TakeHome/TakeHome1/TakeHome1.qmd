@@ -483,7 +483,7 @@ p_payment
 ## 6. Objective 2: Bivariate Visual Analytics
 This section applies suitable bivariate visual analytics techniques to investigate factors influencing portfolio profitability and volatility. Statistical validation is included to check whether the visual differences are supported by formal tests.
 
-### 6.1 Profitability and volatility over time
+### 6.1 Profitability and Volatility over Time
 ```{r}
 #| code-fold: true
 year_perf <- group_by(motor, year)
@@ -515,7 +515,7 @@ The portfolio remained profitable across all three years because the loss ratio 
 A higher loss ratio means weaker profitability.
 :::
 
-### 6.2 Policy type as a profitability driver
+### 6.2 Policy Type and Profitability 
 ```{r}
 #| code-fold: true
 policy_perf <- group_by(motor, policy_type)
@@ -545,6 +545,216 @@ ggplot(policy_perf, aes(x = loss_ratio, y = reorder(policy_type, loss_ratio))) +
     y = "Policy type"
   )
 ```
+
+The plot shows variation in profitability across policy types. `COMP_N` *(comprehensive without excess)* has the highest loss ratio at **93.9%**, indicating low profitability, while  `TP` *(basic coverage)* has the lowest loss ratio at **54.3%**, making it the most profitable segment. Although all the policy types remain below 100% and profitable before expenses, `COMP_N` should be monitored closely.
+
+### 6.3 Claim Rate by Payment Frequency
+```{r}
+#| code-fold: true
+
+payment_claim <- group_by(motor, payment_frequency)
+
+payment_claim <- summarise(
+  payment_claim,
+  records = n(),
+  claim_rate = mean(claim_flag, na.rm = TRUE)
+)
+
+ggplot(payment_claim, aes(x = reorder(payment_frequency, claim_rate), y = claim_rate)) +
+  geom_col(fill = "#e75480") +
+  geom_text(
+    aes(label = percent(claim_rate, accuracy = 0.1)),
+    vjust = -0.4,
+    size = 3.5
+  ) +
+  scale_y_continuous(
+    labels = percent,
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title = "Claim rate by payment frequency",
+    x = "Payment frequency",
+    y = "Share of records with claims"
+  )
+```
+
+This plot compares how often claims occur across different payment frequencies. Payment groups with **higher claim rates** may indicate **greater claim volatility** and should be reviewed further, even if they represent a smaller share of the portfolio.
+
+### 6.4 Policy Status and Business Type
+
+::: {.panel-tabset}
+
+## Policy Status
+```{r}
+#| code-fold: true
+
+status_perf <- group_by(motor, policy_status)
+
+status_perf <- summarise(
+  status_perf,
+  records = n(),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+ggplot(status_perf, aes(x = loss_ratio, y = reorder(policy_status, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = percent, expand = expansion(mult = c(0, 0.2))) +
+  labs(
+    title = "Loss ratio by policy status",
+    x = "Loss ratio",
+    y = "Policy status"
+  )
+```
+
+## Business Type
+
+```{r}
+#| code-fold: true
+
+business_perf <- group_by(motor, business_type)
+
+business_perf <- summarise(
+  business_perf,
+  records = n(),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+ggplot(business_perf, aes(x = loss_ratio, y = reorder(business_type, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = percent, expand = expansion(mult = c(0, 0.2))) +
+  labs(
+    title = "Loss ratio by business type",
+    x = "Loss ratio",
+    y = "Business type"
+  )
+```
+:::
+
+Policy status and business type show differences in profitability. Groups with higher loss ratios are less profitable because a larger share of their premium is used to cover incurred claims.
+
+### 6.5 Bonus Score and Claim Risk
+Bonus score is analysed against claim rate to examine whether different customer risk groups show different levels of claim occurrence.
+```{r}
+#| code-fold: true
+bonus_claim <- group_by(motor, bonus_score)
+
+bonus_claim <- summarise(
+  bonus_claim,
+  records = n(),
+  claim_rate = mean(claim_flag, na.rm = TRUE),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+ggplot(bonus_claim, aes(x = bonus_score, y = claim_rate)) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(claim_rate, accuracy = 0.1)), vjust = -0.4) +
+  scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(
+    title = "Claim rate by bonus score",
+    x = "Bonus score",
+    y = "Share of records with claims"
+  )
+```
+The plot shows a clear relationship between bonus score and claim risk. Records with a favourable claims history (`G`) have the lowest claim rate at **14.2%**, followed by neutral (`N`) at **17.6%**. while poor profiles (`B`) have the highest claim rate at **21.9%**. This indicates that bonus score is a meaningful indicator of volatility.
+
+```{r, echo=FALSE}
+bonus_table <- data.frame(
+  `Bonus Score` = bonus_claim$bonus_score,
+  Records = comma(bonus_claim$records),
+  `Claim Rate` = percent(bonus_claim$claim_rate, accuracy = 0.1),
+  `Loss Ratio` = percent(bonus_claim$loss_ratio, accuracy = 0.1)
+)
+
+knitr::kable(
+  bonus_table,
+  caption = "Claim risk and loss ratio by bonus score"
+)
+```
+
+Higher claim rates show greater risk, while the table adds loss ratio to show how this translates into profitability.
+
+## 7. Statistical Validation
+The bivariate plots suggest that both profitability and claim risk differ across several portfolio segments. To support these observations, statistical tests are applied. Since loss ratio is highly skewed, **non-parametric tests** are used for profitability analysis. For claim occurrence, **Chi-square tests** are used as the outcome is categorical.
+
+### 7.1 Validation of Profitability Differences
+**Kruskal–Wallis tests** are used for variables with more than two categories (eg. year, policy type), while **Wilcoxon tests** are applied to variables with two groups (eg. policy status, business type).
+
+```{r, echo=FALSE}
+year_test <- kruskal.test(loss_ratio ~ year, data = motor)
+policy_type_test <- kruskal.test(loss_ratio ~ policy_type, data = motor)
+policy_status_test <- wilcox.test(loss_ratio ~ policy_status, data = motor)
+business_type_test <- wilcox.test(loss_ratio ~ business_type, data = motor)
+
+profitability_tests <- data.frame(
+  Analysis = c(
+    "Loss ratio by year",
+    "Loss ratio by policy type",
+    "Loss ratio by policy status",
+    "Loss ratio by business type"
+  ),
+  Test = c(
+    "Kruskal-Wallis test",
+    "Kruskal-Wallis test",
+    "Wilcoxon rank-sum test",
+    "Wilcoxon rank-sum test"
+  ),
+  P_Value = c(
+    year_test$p.value,
+    policy_type_test$p.value,
+    policy_status_test$p.value,
+    business_type_test$p.value
+  )
+)
+
+profitability_tests$P_Value <- format.pval(
+  profitability_tests$P_Value,
+  digits = 3,
+  eps = 0.001
+)
+
+knitr::kable(
+  profitability_tests,
+  caption = "Statistical validation of profitability differences"
+)
+```
+
+The profitability tests check whether the loss ratio differs across the selected groups. A small p-value shows that the differences observed are **statistically significant**, meaning that profitability is not evenly distributed across these segments.
+
+### 7.2 Validation of Claim Risk Differences
+**Chi-square tests** are used to validate whether claim occurrence is associated with payment frequency and bonus score.
+
+```{r, echo=FALSE}
+volatility_tests <- data.frame(
+  Analysis = c(
+    "Claim occurrence by payment frequency",
+    "Claim occurrence by bonus score"
+  ),
+  Test = "Chi-square test",
+  P_Value = format.pval(
+    c(
+      chisq.test(table(motor$payment_frequency, motor$claim_flag))$p.value,
+      chisq.test(table(motor$bonus_score, motor$claim_flag))$p.value
+    ),
+    digits = 3,
+    eps = 0.001
+  )
+)
+
+knitr::kable(
+  volatility_tests,
+  caption = "Statistical validation of volatility differences"
+)
+```
+
+The tests check whether differences in claim occurrence across these groups are **statistically significant**. A small p-value shows that claim risk is not randomly distributed, but associated with these factors.
+
+### 7.3 Interpretation of Validation Results
+
+Overall, the statistical tests support the bivariate visual analysis. Profitability differs across year, policy type, policy status and business type, while claim occurrence differs across payment frequency and bonus score. However, because the dataset is very large, statistical significance should be interpreted together with the charts and business context. The results show association, not causation.
+
+
 
 
 
