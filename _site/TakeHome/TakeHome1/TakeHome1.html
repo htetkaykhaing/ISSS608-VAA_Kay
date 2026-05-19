@@ -4212,8 +4212,15 @@ body,p,li,div,span {font-family: "Asap", sans-serif;color: #5c4b51;}h1, h2, h3, 
   <ul class="collapse">
   <li><a href="#validation-of-profitability-differences" id="toc-validation-of-profitability-differences" class="nav-link" data-scroll-target="#validation-of-profitability-differences">7.1 Validation of Profitability Differences</a></li>
   <li><a href="#validation-of-claim-risk-differences" id="toc-validation-of-claim-risk-differences" class="nav-link" data-scroll-target="#validation-of-claim-risk-differences">7.2 Validation of Claim Risk Differences</a></li>
-  <li><a href="#interpretation-of-validation-results" id="toc-interpretation-of-validation-results" class="nav-link" data-scroll-target="#interpretation-of-validation-results">7.3 Interpretation of Validation Results</a></li>
   </ul></li>
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">8. Key Findings</a>
+  <ul class="collapse">
+  <li><a href="#profitability-findings" id="toc-profitability-findings" class="nav-link" data-scroll-target="#profitability-findings">8.1 Profitability Findings</a></li>
+  <li><a href="#volatility-and-claim-risk-findings" id="toc-volatility-and-claim-risk-findings" class="nav-link" data-scroll-target="#volatility-and-claim-risk-findings">8.2 Volatility and Claim Risk Findings</a></li>
+  <li><a href="#statistical-validation-findings" id="toc-statistical-validation-findings" class="nav-link" data-scroll-target="#statistical-validation-findings">8.3 Statistical Validation Findings</a></li>
+  </ul></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations">9. Recommendations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">10. References</a></li>
   </ul>
 </nav>
     </div>
@@ -4246,7 +4253,7 @@ body,p,li,div,span {font-family: "Asap", sans-serif;color: #5c4b51;}h1, h2, h3, 
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">May 17, 2026</p>
+      <p class="date-modified">May 19, 2026</p>
     </div>
   </div>
     
@@ -5213,7 +5220,7 @@ Note
 <div class="cell">
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Statistical validation of claim risk differences</caption>
+<caption>Statistical validation of volatility differences</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Analysis</th>
@@ -5238,12 +5245,62 @@ Note
 </div>
 <p>The tests check whether differences in claim occurrence across these groups are <strong>statistically significant</strong>. A small p-value shows that claim risk is not randomly distributed, but associated with these factors.</p>
 </section>
-<section id="interpretation-of-validation-results" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-of-validation-results">7.3 Interpretation of Validation Results</h3>
-<p>Overall, the statistical tests support the bivariate visual analysis. Profitability differs across year, policy type, policy status and business type, while claim occurrence differs across payment frequency and bonus score. However, because the dataset is very large, statistical significance should be interpreted together with the charts and business context. The results show association, not causation.</p>
-
-
 </section>
+<section id="key-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-findings">8. Key Findings</h2>
+<section id="profitability-findings" class="level3">
+<h3 class="anchored" data-anchor-id="profitability-findings">8.1 Profitability Findings</h3>
+<p>Overall, the portfolio appears profitable, but performance is not equal across all groups.</p>
+<ul>
+<li>The portfolio loss ratio is <strong>70.3%</strong>, meaning incurred claims are lower than total premiums.</li>
+<li>Profitability changed slightly across the years, with 2024 showing a weaker loss ratio than 2022 and 2023.</li>
+<li>Policy type is a key profitability factor, with clear differences in loss ratios across other policy types.</li>
+<li>Policy status and business type also vary, suggesting that policy lifecycle and business source may affect overall performance.</li>
+</ul>
+</section>
+<section id="volatility-and-claim-risk-findings" class="level3">
+<h3 class="anchored" data-anchor-id="volatility-and-claim-risk-findings">8.2 Volatility and Claim Risk Findings</h3>
+<p>Claim risk is not evenly spread across the portfolio. Most records are claim-free, but some groups show higher claim occurrence.</p>
+<ul>
+<li>Only <strong>14.3%</strong> of records have at least one claim.</li>
+<li>This shows that while most policies do not have claims, risk is concentrated in the smaller group.</li>
+<li>Payment frequency differs in claim rate, suggesting a relation between payment behaviour and claim occurrence.</li>
+<li>Bonus score is also informative, with poorer claims history associated with higher claim rates.</li>
+</ul>
+</section>
+<section id="statistical-validation-findings" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-validation-findings">8.3 Statistical Validation Findings</h3>
+<p>The statistical tests support the main visual findings.</p>
+<ul>
+<li><strong>Kruskal-Wallis</strong> tests show that loss ratio differs significantly across year and policy type.</li>
+<li><strong>Wilcoxon</strong> tests shows differences in loss ratio by policy status and business type.</li>
+<li><strong>Chi-square</strong> tests show that claim occurrence is associated with payment frequency and bonus score.</li>
+<li>However, given the large dataset, statistical significance should be interpreted together with the charts and business context.</li>
+</ul>
+</section>
+</section>
+<section id="recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="recommendations">9. Recommendations</h2>
+<ol type="1">
+<li><p><strong>Review weaker policy types first.</strong><br>
+Policy type shows clear differences in loss ratio, so segments with higher loss ratios should be reviewed more closely.</p></li>
+<li><p><strong>Monitor high-risk claim groups.</strong><br>
+Payment frequency and bonus score show differences in claim rate, so these groups can be used as early indicators of claim risk.</p></li>
+<li><p><strong>Explore beyond the overall portfolio result.</strong><br>
+The portfolio is profitable overall, but some segments perform weaker than others. Segment-level monitoring is needed so that weaker areas are not hidden by the overall average.</p></li>
+<li><p><strong>Extend the analysis if needed.</strong><br>
+Future work can use modelling techniques to test multiple factors together and better understand which variables have the strongest effect on profitability and claim risk.</p></li>
+</ol>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">10. References</h2>
+<ul>
+<li><a href="https://r4va.netlify.app/">R for Visual Analytics</a></li>
+<li><a href="https://data.mendeley.com/datasets/sw4jmdb2sm/1">Mendeley Data motor insurance portfolio dataset</a></li>
+<li></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->

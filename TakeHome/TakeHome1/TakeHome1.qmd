@@ -11,7 +11,6 @@ execute:
 ---
 
 ## 1. Overview/Background
-
 Motor insurance portfolios usually contain many policies with no claims and a small number of policies with severe claim outcomes. Because of this, aggregate profitability can look acceptable even when selected segments are loss-making or highly volatile. This study uses visual analytics to examine the distribution of key variables and to identify portfolio factors that may influence profitability and volatility.
 
 ## 2. The tasks
@@ -26,9 +25,7 @@ The analysis is exploratory. The statistical tests validate whether observed dif
 :::
 
 ## 3. Getting started
-
 ### 3.1 Installing and loading the packages
-
 For this exercise, the following R packages will be used:
 
 -   **tidyverse** for data wrangling and ggplot2 visualisation,
@@ -46,7 +43,6 @@ pacman::p_load(tidyverse, scales, patchwork,
 ```
 
 ## 4. The Data
-
 ### 4.1 Data import
 
 The data file used is [Dataset of motor insurance portfolio.csv](https://data.mendeley.com/datasets/sw4jmdb2sm/1). The file is semicolon-delimited, so `read_delim()` is used instead of `read_csv()`.
@@ -750,9 +746,50 @@ knitr::kable(
 
 The tests check whether differences in claim occurrence across these groups are **statistically significant**. A small p-value shows that claim risk is not randomly distributed, but associated with these factors.
 
-### 7.3 Interpretation of Validation Results
+## 8. Key Findings
+### 8.1 Profitability Findings
+Overall, the portfolio appears profitable, but performance is not equal across all groups.
 
-Overall, the statistical tests support the bivariate visual analysis. Profitability differs across year, policy type, policy status and business type, while claim occurrence differs across payment frequency and bonus score. However, because the dataset is very large, statistical significance should be interpreted together with the charts and business context. The results show association, not causation.
+- The portfolio loss ratio is **70.3%**, meaning incurred claims are lower than total premiums.
+- Profitability changed slightly across the years, with 2024 showing a weaker loss ratio than 2022 and 2023.
+- Policy type is a key profitability factor, with clear differences in loss ratios across other policy types.
+- Policy status and business type also vary, suggesting that policy lifecycle and business source may affect overall performance.
+
+### 8.2 Volatility and Claim Risk Findings
+Claim risk is not evenly spread across the portfolio. Most records are claim-free, but some groups show higher claim occurrence.
+
+- Only **14.3%** of records have at least one claim.
+- This shows that while most policies do not have claims, risk is concentrated in the smaller group.
+- Payment frequency differs in claim rate, suggesting a relation between payment behaviour and claim occurrence.
+- Bonus score is also informative, with poorer claims history associated with higher claim rates.
+
+### 8.3 Statistical Validation Findings
+The statistical tests support the main visual findings.
+
+- **Kruskal-Wallis** tests show that loss ratio differs significantly across year and policy type.
+- **Wilcoxon** tests shows differences in loss ratio by policy status and business type.
+- **Chi-square** tests show that claim occurrence is associated with payment frequency and bonus score.
+- However, given the large dataset, statistical significance should be interpreted together with the charts and business context.
+
+## 9. Recommendations
+
+1. **Review weaker policy types first.**  
+Policy type shows clear differences in loss ratio, so segments with higher loss ratios should be reviewed more closely.
+
+2. **Monitor high-risk claim groups.**  
+Payment frequency and bonus score show differences in claim rate, so these groups can be used as early indicators of claim risk.
+
+3. **Explore beyond the overall portfolio result.**  
+The portfolio is profitable overall, but some segments perform weaker than others. Segment-level monitoring is needed so that weaker areas are not hidden by the overall average.
+
+4. **Extend the analysis if needed.**  
+Future work can use modelling techniques to test multiple factors together and better understand which variables have the strongest effect on profitability and claim risk.
+
+## 10. References
+
+- [R for Visual Analytics](https://r4va.netlify.app/)
+- [Mendeley Data motor insurance portfolio dataset](https://data.mendeley.com/datasets/sw4jmdb2sm/1)
+- 
 
 
 
