@@ -10,6 +10,9 @@ execute:
   freeze: true
 ---
 
+## 0. Quarto Presentation
+[Take Home Exercise 1 - Presentation](Presentation.qmd)
+
 ## 1. Overview/Background
 Motor insurance portfolios usually contain many policies with no claims and a small number of policies with severe claim outcomes. Because of this, aggregate profitability can look acceptable even when selected segments are loss-making or highly volatile. This study uses visual analytics to examine the distribution of key variables and to identify portfolio factors that may influence profitability and volatility.
 
@@ -18,7 +21,7 @@ Motor insurance portfolios usually contain many policies with no claims and a sm
 1.  **Apply suitable univariate visual analytics techniques** to explore the distributions and characteristics of numerical and categorical variables.
 2.  **Apply suitable bivariate visual analytics techniques** to investigate and statistically validate factors influencing the profitability and volatility of the insurance portfolio.
 
-For this report, **profitability** is measured mainly using `underwriting_result`, `underwriting_margin` and `loss_ratio`. **Volatility** is examined using claim occurrence, claim frequency, the spread of loss ratio and upper-tail loss ratio behaviour.
+For this report, **profitability** is measured mainly using `underwriting_result` and `loss_ratio`. **Volatility** is examined using claim occurrence, claim frequency, the spread of loss ratio and upper-tail loss ratio behaviour.
 
 ::: {.callout-note}
 The analysis is exploratory. The statistical tests validate whether observed differences are unlikely to be random, but they do not prove direct causality. Business interpretation is still required because the dataset is observational.
@@ -482,30 +485,38 @@ This section applies suitable bivariate visual analytics techniques to investiga
 ### 6.1 Profitability and Volatility over Time
 ```{r}
 #| code-fold: true
-year_perf <- group_by(motor, year)
-
 year_perf <- summarise(
-  year_perf,
+  group_by(motor, year),
   total_premium = sum(total_premium, na.rm = TRUE),
   total_incurred = sum(total_incurred, na.rm = TRUE),
   loss_ratio = total_incurred / total_premium
 )
 
-ggplot(year_perf, aes(x = year, y = loss_ratio)) +
+p7 <- ggplot(year_perf, aes(x = year, y = loss_ratio)) +
   geom_col(fill = "#e75480") +
-  geom_text(
-    aes(label = percent(loss_ratio, accuracy = 0.1)),
-    vjust = -0.4,
-    size = 3.5
-  ) +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), vjust = -0.4, size = 3.5) +
   scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
   labs(
     title = "Portfolio loss ratio by year",
     x = "Year",
     y = "Loss ratio"
   )
+
+p8 <- ggplot(
+  filter(motor, total_claims > 0, total_incurred > 0),
+  aes(x = total_incurred, y = year)
+) +
+  ggridges::geom_density_ridges(fill = "#e75480", alpha = 0.65, colour = "white") +
+  scale_x_log10(labels = label_number()) +
+  labs(
+    title = "Claim severity distribution by year",
+    x = "Total incurred claims",
+    y = "Year"
+  )
+
+p7 + p8
 ```
-The portfolio remained profitable across all three years because the loss ratio stayed below 100%. However, the loss ratio increased in 2024, suggesting that profitability weakened compared with 2022 and 2023.
+The ridgeline plot shows that claim amounts are highly-right skewed in all three years, with most claim records concentrated at lower values and fewer records extending into higher amounts. While the overall shape is similar across all years, 2024 shows slightly weaker profitability, suggesting that the change may be driven by claim size or portfolio mix rather than a major change in claim distribution.
 
 ::: {.callout-note}
 A higher loss ratio means weaker profitability.
@@ -634,16 +645,14 @@ Policy status and business type show differences in profitability. Groups with h
 Bonus score is analysed against claim rate to examine whether different customer risk groups show different levels of claim occurrence.
 ```{r}
 #| code-fold: true
-bonus_claim <- group_by(motor, bonus_score)
-
 bonus_claim <- summarise(
-  bonus_claim,
+  group_by(motor, bonus_score),
   records = n(),
   claim_rate = mean(claim_flag, na.rm = TRUE),
   loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
 )
 
-ggplot(bonus_claim, aes(x = bonus_score, y = claim_rate)) +
+p9 <- ggplot(bonus_claim, aes(x = bonus_score, y = claim_rate)) +
   geom_col(fill = "#e75480") +
   geom_text(aes(label = percent(claim_rate, accuracy = 0.1)), vjust = -0.4) +
   scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
@@ -652,8 +661,23 @@ ggplot(bonus_claim, aes(x = bonus_score, y = claim_rate)) +
     x = "Bonus score",
     y = "Share of records with claims"
   )
+
+p10 <- ggplot(
+  filter(motor, total_claims > 0, total_incurred > 0, !is.na(bonus_score)),
+  aes(x = total_incurred, y = reorder(bonus_score, total_incurred, median))
+) +
+  ggdist::stat_halfeye(fill = "#e75480", alpha = 0.7, width = 0.6) +
+  geom_boxplot(width = 0.12, outlier.shape = NA, alpha = 0.5) +
+  scale_x_log10(labels = label_number()) +
+  labs(
+    title = "Claim severity by bonus score",
+    x = "Total incurred claims",
+    y = "Bonus score"
+  )
+
+p9 + p10
 ```
-The plot shows a clear relationship between bonus score and claim risk. Records with a favourable claims history (`G`) have the lowest claim rate at **14.2%**, followed by neutral (`N`) at **17.6%**. while poor profiles (`B`) have the highest claim rate at **21.9%**. This indicates that bonus score is a meaningful indicator of volatility.
+The plot shows a clear relationship between bonus score and claim risk.Poor profiles (`B`) have the highest claim rate at **21.9%**, followed by neutral profiles (`N`) at **17.6%**, while favourable profiles (`G`) have the lowest claim rate at **14.2%**. The severity plot shows that claim amounts are still highly skewed across all groups, so bonus score is more useful for identifying claim likelihood than clearly separating claim size.
 
 ```{r, echo=FALSE}
 bonus_table <- data.frame(
@@ -789,10 +813,8 @@ Future work can use modelling techniques to test multiple factors together and b
 
 - [R for Visual Analytics](https://r4va.netlify.app/)
 - [Mendeley Data motor insurance portfolio dataset](https://data.mendeley.com/datasets/sw4jmdb2sm/1)
-- 
-
-
-
+- [ggridge](https://wilkelab.org/ggridges/index.html)
+- [ggdist](https://mjskay.github.io/ggdist/index.html)
 
 
 

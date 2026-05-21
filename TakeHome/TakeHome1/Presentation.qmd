@@ -1,0 +1,402 @@
+---
+title: "Executive Summary: Motor Insurance Portfolio"
+author: "Htet Kay Khaing"
+date: "May 20, 2026"
+format:
+  revealjs:
+    smaller: true
+    css: ../../styles.css
+    title-slide: false
+    slide-level: 2
+    theme: simple
+    slide-number: true
+    code-fold: true
+    code-tools: false
+    self-contained: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| include: false
+
+library(tidyverse)
+library(scales)
+library(patchwork)
+library(ggridges)
+library(ggdist)
+library(knitr)
+
+motor_raw <- read_delim(
+  "data/Dataset of motor insurance portfolio.csv",
+  delim = ";",
+  show_col_types = FALSE
+)
+
+motor_prep <- mutate(
+  motor_raw,
+  year = as.factor(year),
+  policy_type = as.factor(policy_type),
+  policy_status = as.factor(policy_status),
+  business_type = as.factor(business_type),
+  payment_frequency = as.factor(payment_frequency),
+  underwriting_result = total_premium - total_incurred,
+  loss_ratio = if_else(total_premium > 0, total_incurred / total_premium, NA_real_),
+  claim_flag = total_claims > 0
+)
+
+motor_prep <- filter(motor_prep, total_premium > 0, total_exposure > 0)
+
+loss_ratio_cap_value <- quantile(motor_prep$loss_ratio, 0.99, na.rm = TRUE)
+
+motor <- mutate(motor_prep, loss_ratio_capped = pmin(loss_ratio, loss_ratio_cap_value))
+
+portfolio_summary <- summarise(
+  motor,
+  valid_records = n(),
+  unique_insured = n_distinct(insured_id),
+  total_premium = sum(total_premium, na.rm = TRUE),
+  total_incurred = sum(total_incurred, na.rm = TRUE),
+  underwriting_result = sum(underwriting_result, na.rm = TRUE),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE),
+  total_claims = sum(total_claims, na.rm = TRUE),
+  claim_record_rate = mean(claim_flag, na.rm = TRUE)
+)
+```
+
+## Executive Summary Presentation
+
+**Focus:** Univariate and bivariate visual analytics for portfolio profitability and volatility  
+**Dataset:** Motor insurance portfolio transaction records, 2022 to 2024
+
+::: {.notes}
+This opening slide introduces the purpose of the presentation. The analysis focuses on a motor insurance portfolio, using visual analytics to examine how key variables are distributed across the portfolio.
+The main focus is to identify factors linked to profitability and volatility. Profitability is mainly assessed using loss ratio and underwriting result, while volatility is assessed using claim occurrence and claim severity. The presentation summarises the main analytical findings and most relevant business insights.
+:::
+
+## Contents
+
+1. Study objective and data scope  
+2. Portfolio-level summary  
+3. Univariate distribution patterns  
+4. Bivariate profitability and volatility findings  
+5. Statistical validation  
+6. Key findings and recommendations
+
+::: {.notes}
+This slide outlines the flow of the presentation. The first part explains the dataset and overall portfolio position. Then, moves into the univariate analysis, to describe the portfolio structure. 
+The next section focuses on bivariate analysis, where selected factors are compared against profitability and claim risk measures. Finally, statistical validation is used to check whether the observed patterns are statistically meaningful.
+:::
+
+## Study Objective and Data Scope
+
+**Main objective:**  
+Explore the motor insurance portfolio using visual analytics to identify profitability and volatility patterns.
+
+**Specific tasks:**
+
+- Apply suitable **univariate** visual analytics techniques to explore numerical and categorical variables.
+- Apply suitable **bivariate** visual analytics techniques to investigate and statistically validate factors influencing portfolio profitability and volatility.
+
+::: {.notes}
+The study is guided by two tasks. First, univariate analysis is used to describe the portfolio in terms of premium, incurred claims, claim counts and key categorical composition. Second, bivariate analysis examines whether selected factors such as year, policy type, payment frequency and bonus score are associated with profitability or claim risk. This keeps the analysis aligned with the assignment requirement.
+:::
+
+## Portfolio-level Summary
+
+```{r}
+portfolio_display <- data.frame(
+  Metric = c(
+    "Valid records",
+    "Unique insured customers",
+    "Total premium",
+    "Total incurred claims",
+    "Underwriting result",
+    "Portfolio loss ratio",
+    "Claim record rate"
+  ),
+  Value = c(
+    comma(portfolio_summary$valid_records),
+    comma(portfolio_summary$unique_insured),
+    comma(portfolio_summary$total_premium, accuracy = 1),
+    comma(portfolio_summary$total_incurred, accuracy = 1),
+    comma(portfolio_summary$underwriting_result, accuracy = 1),
+    percent(portfolio_summary$loss_ratio, accuracy = 0.1),
+    percent(portfolio_summary$claim_record_rate, accuracy = 0.1)
+  )
+)
+
+knitr::kable(portfolio_display)
+```
+
+::: {.notes}
+The portfolio contains a large number of valid records and insured customers, which supports meaningful segment-level analysis. Overall, the portfolio is profitable, as total premium exceeds total incurred claims and the loss ratio is below 100%. However, the claim record rate shows that only a minority of records have claims, which suggests that volatility is likely concentrated in a smaller group of claim-making records.
+:::
+
+## Univariate Pattern: Financial Variables
+
+```{r}
+p1 <- ggplot(motor, aes(x = total_premium)) +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
+  scale_x_continuous(labels = label_number()) +
+  labs(title = "Total premium", x = NULL, y = "Records")
+
+p2 <- ggplot(motor, aes(x = total_incurred)) +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
+  scale_x_continuous(labels = label_number()) +
+  labs(title = "Total incurred claims", x = NULL, y = "Records")
+
+p3 <- ggplot(motor, aes(x = underwriting_result)) +
+  geom_histogram(bins = 45, fill = "#e75480", colour = "white") +
+  scale_x_continuous(labels = label_number()) +
+  labs(title = "Underwriting result", x = NULL, y = "Records")
+
+p1 + p2 + p3
+```
+
+::: {.notes}
+The financial variables are highly skewed. Most records have relatively low premiums and little or no incurred claims, which is common in insurance portfolios, where many policies do not generate losses.
+The underwriting result is also concentrated around smaller values, but some records show large negative results. This indicates that the portfolio is stable for most records, but profitability is still exposed to high-cost claim cases.
+:::
+
+## Univariate Pattern: Portfolio Composition
+
+```{r}
+policy_tbl <- count(motor, policy_type)
+policy_tbl <- mutate(policy_tbl, pct = n / sum(n))
+
+status_tbl <- count(motor, policy_status)
+status_tbl <- mutate(status_tbl, pct = n / sum(n))
+
+p4 <- ggplot(policy_tbl, aes(x = n, y = fct_reorder(policy_type, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Policy type", x = "Records", y = NULL)
+
+p5 <- ggplot(status_tbl, aes(x = n, y = fct_reorder(policy_status, n))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(pct, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = comma, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Policy status", x = "Records", y = NULL)
+
+p4 + p5
+```
+
+::: {.notes}
+The portfolio is not evenly distributed across categories. Policy exposure is highest in major policy types such as **CC** and **COMP_E**, while most records are active and only a small group are cancelled. 
+This matters because large categories have greater influence on overall results, while smaller groups may still be important if they show weak profitability or higher claim risk in the bivariate analysis.
+:::
+
+## Profitability over Time
+
+```{r}
+year_perf <- summarise(
+  group_by(motor, year),
+  total_premium = sum(total_premium, na.rm = TRUE),
+  total_incurred = sum(total_incurred, na.rm = TRUE),
+  loss_ratio = total_incurred / total_premium
+)
+
+p6 <- ggplot(year_perf, aes(x = year, y = loss_ratio)) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), vjust = -0.4, size = 3.5) +
+  scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Portfolio loss ratio by year", x = "Year", y = "Loss ratio")
+
+p7 <- ggplot(
+  filter(motor, total_claims > 0, total_incurred > 0),
+  aes(x = total_incurred, y = year)
+) +
+  ggridges::geom_density_ridges(fill = "#e75480", alpha = 0.65, colour = "white") +
+  scale_x_log10(labels = label_number()) +
+  labs(title = "Claim severity by year", x = "Total incurred claims", y = "Year")
+
+p6 + p7
+```
+
+::: {.notes}
+The slide shows that the portfolio remained profitable in all three years, which is a positive underwriting performance. However, 2024 shows a weaker loss ratio than the earlier years. 
+The ridgeline plot adds useful context by showing that claim amounts are highly skewed every year. This suggests that weaker annual performance may be driven by claim size or portfolio mix, not only by the number of claims.
+:::
+
+## Policy Type and Profitability
+
+```{r}
+policy_perf <- summarise(
+  group_by(motor, policy_type),
+  records = n(),
+  premium = sum(total_premium, na.rm = TRUE),
+  incurred = sum(total_incurred, na.rm = TRUE),
+  loss_ratio = incurred / premium
+)
+
+ggplot(policy_perf, aes(x = loss_ratio, y = reorder(policy_type, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Loss ratio by policy type", x = "Loss ratio", y = "Policy type")
+```
+
+::: {.notes}
+Policy type is one of the clearest profitability dimensions. Some policy types have much higher loss ratios than others. **COMP_N** has the weakest profitability, while TP has the strongest result among the groups displayed. 
+Although all policy types remain below 100%, weaker segments should be monitored because they use a larger share of premium to cover incurred claims.
+:::
+
+## Claim Risk by Payment Frequency
+
+```{r}
+payment_claim <- summarise(
+  group_by(motor, payment_frequency),
+  records = n(),
+  claim_rate = mean(claim_flag, na.rm = TRUE)
+)
+
+ggplot(payment_claim, aes(x = reorder(payment_frequency, claim_rate), y = claim_rate)) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(claim_rate, accuracy = 0.1)), vjust = -0.4, size = 3.5) +
+  scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Claim rate by payment frequency", x = "Payment frequency", y = "Share of records with claims")
+```
+
+::: {.notes}
+This chart examines volatility through claim occurrence. Payment frequency groups with higher claim rates have a larger share of records with at least one claim, which suggests that payment behaviour may be associated with different risk profiles. 
+The result is useful because it highlights differences in the likelihood of claim activity across customer payment groups.
+:::
+
+## Policy Lifecycle and Business Source
+
+```{r}
+status_perf <- summarise(
+  group_by(motor, policy_status),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+business_perf <- summarise(
+  group_by(motor, business_type),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+p8 <- ggplot(status_perf, aes(x = loss_ratio, y = reorder(policy_status, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = percent, expand = expansion(mult = c(0, 0.2))) +
+  labs(title = "Policy status", x = "Loss ratio", y = NULL)
+
+p9 <- ggplot(business_perf, aes(x = loss_ratio, y = reorder(business_type, loss_ratio))) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(loss_ratio, accuracy = 0.1)), hjust = -0.1, size = 3) +
+  scale_x_continuous(labels = percent, expand = expansion(mult = c(0, 0.2))) +
+  labs(title = "Business type", x = "Loss ratio", y = NULL)
+
+p8 + p9
+```
+
+::: {.notes}
+Policy status and business type give another useful view of profitability. They help show whether performance differs between active and cancelled policies, or between different business sources. If certain groups have higher loss ratios, they may need closer review. This is important because the portfolio may look healthy overall, while some smaller segments are performing less well.
+:::
+
+## Bonus Score and Claim Risk
+
+```{r}
+bonus_claim <- summarise(
+  group_by(motor, bonus_score),
+  records = n(),
+  claim_rate = mean(claim_flag, na.rm = TRUE),
+  loss_ratio = sum(total_incurred, na.rm = TRUE) / sum(total_premium, na.rm = TRUE)
+)
+
+p10 <- ggplot(bonus_claim, aes(x = bonus_score, y = claim_rate)) +
+  geom_col(fill = "#e75480") +
+  geom_text(aes(label = percent(claim_rate, accuracy = 0.1)), vjust = -0.4) +
+  scale_y_continuous(labels = percent, expand = expansion(mult = c(0, 0.15))) +
+  labs(title = "Claim rate by bonus score", x = "Bonus score", y = "Share of records with claims")
+
+p11 <- ggplot(
+  filter(motor, total_claims > 0, total_incurred > 0, !is.na(bonus_score)),
+  aes(x = total_incurred, y = reorder(bonus_score, total_incurred, median))
+) +
+  ggdist::stat_halfeye(fill = "#e75480", alpha = 0.7, width = 0.6) +
+  geom_boxplot(width = 0.12, outlier.shape = NA, alpha = 0.5) +
+  scale_x_log10(labels = label_number()) +
+  labs(title = "Claim severity by bonus score", x = "Total incurred claims", y = "Bonus score")
+
+p10 + p11
+```
+
+::: {.notes}
+Bonus score appears to be useful for claim risk. Poorer bonus profiles show higher claim rates, while favourable profiles have lower claim rates. However, claim amounts remain highly skewed across all bonus groups, so bonus score is better at showing how likely a claim is, rather than clearly predicting how large the claim will be.
+:::
+
+## Statistical Validation
+
+```{r}
+profitability_tests <- data.frame(
+  Analysis = c(
+    "Loss ratio by year",
+    "Loss ratio by policy type",
+    "Loss ratio by policy status",
+    "Loss ratio by business type"
+  ),
+  Test = c(
+    "Kruskal-Wallis",
+    "Kruskal-Wallis",
+    "Wilcoxon rank-sum",
+    "Wilcoxon rank-sum"
+  ),
+  P_Value = format.pval(
+    c(
+      kruskal.test(loss_ratio ~ year, data = motor)$p.value,
+      kruskal.test(loss_ratio ~ policy_type, data = motor)$p.value,
+      wilcox.test(loss_ratio ~ policy_status, data = motor)$p.value,
+      wilcox.test(loss_ratio ~ business_type, data = motor)$p.value
+    ),
+    digits = 3,
+    eps = 0.001
+  )
+)
+
+volatility_tests <- data.frame(
+  Analysis = c(
+    "Claim occurrence by payment frequency",
+    "Claim occurrence by bonus score"
+  ),
+  Test = "Chi-square",
+  P_Value = format.pval(
+    c(
+      chisq.test(table(motor$payment_frequency, motor$claim_flag))$p.value,
+      chisq.test(table(motor$bonus_score, motor$claim_flag))$p.value
+    ),
+    digits = 3,
+    eps = 0.001
+  )
+)
+
+knitr::kable(rbind(profitability_tests, volatility_tests))
+```
+
+::: {.notes}
+The statistical tests support the visual findings. Since loss ratio is highly skewed, non-parametric tests are used. Chi-square tests are used for claim occurrence because claim flag is categorical. 
+Overall, the results indicate that the selected factors are associated with profitability or claim risk. However, given a large dataset, the charts and business context remain important for interpretation.
+:::
+
+## Key Findings and Recommendations
+
+**Key findings**
+
+- Portfolio is profitable overall, but it varies by segment.
+- Policy type is a strong profitability dimension.
+- Payment frequency and bonus score are useful claim-risk indicators.
+- Skewed claim amounts mean average results can hide tail risk.
+
+**Recommendations**
+
+- Review weaker policy types first.
+- Monitor high-risk claim groups.
+- Use statistics with business judgement.
+
+::: {.notes}
+The main conclusion is that the portfolio performs well overall, but the average result hides important segment differences. Policy type should be reviewed first because loss ratio differs clearly across products. Payment frequency and bonus score are also useful for spotting groups with higher claim risk. The statistical tests support these patterns, but the results should still be interpreted with exposure size, business context and underwriting judgement.
+:::
