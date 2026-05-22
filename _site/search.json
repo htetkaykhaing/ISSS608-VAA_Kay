@@ -4,7 +4,7 @@
     "href": "TakeHome/TakeHome1/TakeHome1.html",
     "title": "Take-home Exercise 1",
     "section": "",
-    "text": "Take Home Exercise 1 - Presentation"
+    "text": "Executive Summary: Motor Insurance Portfolio"
   },
   {
     "objectID": "TakeHome/TakeHome1/TakeHome1.html#quarto-presentation",
@@ -852,5 +852,12 @@
     "title": "Executive Summary: Motor Insurance Portfolio",
     "section": "Key Findings and Recommendations",
     "text": "Key Findings and Recommendations\nKey findings\n\nPortfolio is profitable overall, but it varies by segment.\nPolicy type is a strong profitability dimension.\nPayment frequency and bonus score are useful claim-risk indicators.\nSkewed claim amounts mean average results can hide tail risk.\n\nRecommendations\n\nReview weaker policy types first.\nMonitor high-risk claim groups.\nUse statistics with business judgement.\n\n\nThe main conclusion is that the portfolio performs well overall, but the average result hides important segment differences. Policy type should be reviewed first because loss ratio differs clearly across products. Payment frequency and bonus score are also useful for spotting groups with higher claim risk. The statistical tests support these patterns, but the results should still be interpreted with exposure size, business context and underwriting judgement."
+  },
+  {
+    "objectID": "TakeHome/TakeHome1/TakeHome1.html#executive-summary",
+    "href": "TakeHome/TakeHome1/TakeHome1.html#executive-summary",
+    "title": "Take-home Exercise 1",
+    "section": "",
+    "text": "Executive Summary: Motor Insurance Portfolio"
   }
 ]

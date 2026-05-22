@@ -10,8 +10,8 @@ execute:
   freeze: true
 ---
 
-## 0. Quarto Presentation
-[Take Home Exercise 1 - Presentation](Presentation.qmd)
+## 0. Executive Summary
+[Executive Summary: Motor Insurance Portfolio](Presentation.qmd)
 
 ## 1. Overview/Background
 Motor insurance portfolios usually contain many policies with no claims and a small number of policies with severe claim outcomes. Because of this, aggregate profitability can look acceptable even when selected segments are loss-making or highly volatile. This study uses visual analytics to examine the distribution of key variables and to identify portfolio factors that may influence profitability and volatility.
