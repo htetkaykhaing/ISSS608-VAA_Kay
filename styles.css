@@ -3,15 +3,15 @@
 /* main text */
 body,
 p,
-li,
-div,
-span {
+li
+{
   font-family: "Asap", sans-serif;
   color: #5c4b51;
 }
 
 /* headings */
-h1, h2, h3, h4 {
+h1, h2, h3, h4
+{
   font-family: "Asap", sans-serif;
   color: #d46a92;
   font-weight: 700;
@@ -31,7 +31,8 @@ a:hover {
 
 .navbar a,
 .navbar-brand {
-  color: #7a4b5d !important;
+  font-family: "Asap", sans-serif !important;
+  color: #7a4b5d;
   font-weight: 600;
 }
 
