@@ -17,14 +17,15 @@ In this exercise, we will solve [Mini Challenge 1](https://vast-challenge.github
 ## Overview
 **TenantThread's embargo breach** was not a planned leak by one person. It was mainly a system breakdown under pressure. As the crisis grew, the team moved from careful checking to trying to control the story.
 
-After *SaltWind* published the news at 5:00 PM, Legal treated the embargo as already broken and pushed **"GO"** at 5:19 PM. This led to merger-related posts going out before the official 6:00 PM release.
+After *SaltWind* published the news at 5:00 PM, Legal treated the embargo as already broken and pushed "GO" at 5:19 PM. This led to merger-related posts going out before the official 6:00 PM release.
 
 So, the early release was a deliberate decision at that moment, but it was not planned from the start. The visuals show this through the timeline, unusual crisis behaviour and warning signs before the breach.
 
 ## 1. Setup and Data Import
 Firstly, load the packages.
 ```{r}
-pacman::p_load(tidyverse, knitr, patchwork, jsonlite, lubridate, ggrepel, scales, dplyr, tidyr, forcats)
+pacman::p_load(tidyverse, knitr, jsonlite, lubridate,
+               ggrepel, scales, dplyr, tidyr, forcats)
 ```
 
 Then, the below code chunk is to load the data and set theme setting to apply a consistent visual style to all charts. The helper functions are used to safely extract text from the JSON file, especially when some fields are missing or contain multiple values.
@@ -44,7 +45,7 @@ rounds <- raw$rounds
 ```
 
 ```{r, echo=FALSE}
-pink <- c("#c9255a", "#eb5e8d", "#f996ba", "#fa75aa", "#e8a1b8", "#8a6f78")
+theme_color <- c("#c9255a", "#eb5e8d", "#f996ba", "#fa75aa", "#e8a1b8")
 
 theme_set(
   theme_minimal(base_size = 13) +
@@ -57,19 +58,19 @@ theme_set(
 )
 
 options(
-  ggplot2.discrete.fill = pink,
-  ggplot2.discrete.colour = pink
+  ggplot2.discrete.fill = theme_color,
+  ggplot2.discrete.colour = theme_color
 )
 ```
 
 ## 2. Data Preparation and Wrangling
-The JSON file is nested by round. Each round contains contextual information, communications and participant actions. The preparation step creates three tidy tables:
+The JSON file is nested by round. Each round contains contextual information and communication records. The preparation step creates two tidy tables:
 
 1.  `round_tbl`: one row per round or hour.
 2.  `communication_tbl`: one row per message.
-3.  `participant_tbl`: one row per agent-round declared action.
 
-### 2.1 `round_tbl`
+:::: {.panel-tabset}
+## `round_tbl`
 ```{r}
 #| code-fold: true
 round_tbl <- map_dfr(seq_along(rounds), function(i) {
@@ -101,35 +102,15 @@ round_tbl %>%
   select(round_id, hour, stage, event_headline, stock_price,
          percent_change, market_sentiment, n_communications) %>%
   mutate(event_headline = str_trunc(event_headline, 45)) %>%
-  head(5) %>%
-  knitr::kable(
-    caption = "Preview of Cleaned MC1 Timeline Data",
-    digits = 2
-  )
-```
-
-<details>
-<summary>Click to view full rounds table</summary>
-```{r}
-#| echo: false
-round_tbl %>%
-  select(round_id, hour, stage, event_headline, stock_price,
-         percent_change, market_sentiment, n_communications) %>%
-  mutate(event_headline = str_trunc(event_headline, 45)) %>%
   knitr::kable(
     caption = "Full Cleaned MC1 Timeline Data",
     digits = 2
   )
 ```
-</details>
 
 The above code chunk creates a cleaned summary table from the JSON data, with one row for each time period. It keeps only the key fields needed for the analysis, such as time, crisis stage, event headline, stock price, sentiment and number of communications.
 
-::: {.callout-note}
-The preview table shows the first few cleaned timeline records, while the expandable table provides the full dataset.
-:::
-
-### 2.2 `communication_tbl`
+## `communication_tbl`
 ```{r}
 #| code-fold: true
 communication_tbl <- map_dfr(seq_along(rounds), function(i) {
@@ -157,23 +138,14 @@ communication_tbl <- map_dfr(seq_along(rounds), function(i) {
         time < ymd_hms("2046-06-05 18:00:00") ~ "3. Premature release",
         TRUE ~ "4. Post-embargo"
       ),
-      message_id = get_text(msg$message_id),
       agent_role = get_text(msg$agent_role),
       agent_label = get_text(msg$agent_label),
       channel = channel_text,
       message_type = get_text(msg$message_type),
-      recipients = get_text(msg$recipients),
-      reacting = get_text(state$reacting),
-      rationalizing = get_text(state$rationalizing),
-      deliberating = get_text(state$deliberating),
-      event_headline = get_text(env$event_headline),
-      market_sentiment = get_text(market$sentiment),
       public_channel = channel_text %in% c("official_post", "personal_post", "anonymous_post"),
-      official_channel = channel_text == "official_post",
       personal_or_anon = channel_text %in% c("personal_post", "anonymous_post"),
       deal_terms = str_detect(content_lc, "civicloom|harborcrest|residentedge|definitive merger|merger agreement"),
       embargo_terms = str_detect(content_lc, "embargo|6:00|6pm|six pm|bilateral release|section 4\\.3|go\\."),
-      governance_terms = str_detect(content_lc, "audit|consent|role-based|score transparency|operator accounts|governance"),
       crisis_terms = str_detect(content_lc, "critical|sentiment|mac|covenant|termination|silence|residentiq|saltwind"),
       prohibited_signal = str_detect(content_lc, "civicloom|harborcrest|residentedge|merger|embargo|6:00|6pm|strategic partnership")
     )
@@ -190,7 +162,6 @@ communication_tbl %>%
 
 <details>
 <summary>Click to view full communication table</summary>
-
 ```{r}
 #| echo: false
 communication_tbl %>%
@@ -199,71 +170,17 @@ communication_tbl %>%
     caption = "Full Cleaned Communication Data"
   )
 ```
-
 </details>
 
 The above code chunk creates a cleaned communication table from the JSON data, with one row for each message. It keeps the key fields needed to analyse who communicated, through which channel, at what stage, and whether the message contained crisis, governance, embargo or merger-related terms.
 
-### 2.3 `participant_tbl`
-```{r}
-#| code-fold: true
-participant_tbl <- map_dfr(seq_along(rounds), function(i) {
-  
-  r <- rounds[[i]]
-  env <- r$environment_context
-  market <- env$market_snapshot
-  time <- ymd_hms(get_text(r$hour))
-  
-  map_dfr(r$participants, function(p) {
-    
-    meta <- p$agent_round_metadata
-    
-    tibble(
-      round_id = i,
-      hour = time,
-      stage = case_when(
-        time < ymd_hms("2046-06-05 00:00:00") ~ "1. Pre-crisis",
-        time < ymd_hms("2046-06-05 17:00:00") ~ "2. Crisis before release",
-        time < ymd_hms("2046-06-05 18:00:00") ~ "3. Premature release",
-        TRUE ~ "4. Post-embargo"
-      ),
-      agent_id = get_text(p$agent_id),
-      agent_role = get_text(p$agent_role),
-      agent_label = get_text(p$agent_label),
-      declared_action = get_text(p$declared_action),
-      sentiment_at_turn = get_text(meta$sentiment_at_turn),
-      action_classification = get_text(meta$action_classification),
-      event_headline = get_text(env$event_headline),
-      market_sentiment = get_text(market$sentiment)
-    )
-  })
-})
+::: {.callout-note}
+The preview table shows the first few cleaned communication records, while the expandable table provides the full dataset.
+:::
 
-participant_tbl %>%
-  select(round_id, hour, stage, agent_role, declared_action, sentiment_at_turn, action_classification) %>%
-  head(5) %>%
-  knitr::kable(
-    caption = "Preview of Cleaned Participant Data"
-  )
-```
+::::
 
-<details>
-<summary>Click to view full participant table</summary>
-
-```{r}
-#| echo: false
-participant_tbl %>%
-  select(round_id, hour, stage, agent_role, declared_action, sentiment_at_turn, action_classification) %>%
-  knitr::kable(
-    caption = "Full Cleaned Participant Data"
-  )
-```
-
-</details>
-
-This code chunk creates a cleaned participant table from the JSON data, with one row for each agent in each time period. It is used to compare participant roles, actions and sentiment across the different crisis stages.
-
-### 2.4 Dataset Checks
+### 2.1 Dataset Checks
 The dataset was checked before analysis. 
 ```{r}
 #| code-fold: true
@@ -288,7 +205,7 @@ summary_tbl <- tibble(
   )
 )
 
-knitr::kable(summary_tbl, caption = "Data completeness summary")
+knitr::kable(summary_tbl, caption = "Data Completeness Summary")
 ```
 It contains **23** time periods, **912** messages and **77** public posts, which provides enough data to study the crisis timeline and communication patterns.
 
@@ -329,7 +246,7 @@ ggplot(key_events, aes(time, severity, colour = event_type)) +
   scale_x_datetime(date_labels = "%d %b") +
   scale_y_continuous(breaks = 1:5, limits = c(1, 5.5)) +
   labs(
-    title = "Pressure built up before the premature release",
+    title = "Event Sequence and Severity",
     x = NULL,
     y = "Severity",
     colour = "Event type"
@@ -384,7 +301,7 @@ ggplot() +
   scale_x_continuous(limits = c(0.6, 5.4)) +
   scale_y_continuous(limits = c(0.5, 2.5)) +
   labs(
-    title = "The early release followed a pressure-to-decision pathway",
+    title = "Pressure-to-release Pathway",
     x = NULL,
     y = NULL,
     fill = "Factor"
@@ -454,7 +371,7 @@ ggplot(release_path, aes(x = time, y = lane_id)) +
   scale_x_datetime(date_labels = "%H:%M", date_breaks = "15 min") +
   scale_size_manual(values = c(`FALSE` = 3, `TRUE` = 4.5), guide = "none") +
   labs(
-    title = "The embargo failed through a chain of actors and weak controls",
+    title = "Embargo Breach Swimlane",
     x = "Time on 5 June",
     y = NULL,
     colour = "Event type"
@@ -474,7 +391,7 @@ The visuals show that:
 - on 5 June, **Judge** warned against releasing strategic information, but it could not block actions. When SaltWind broke the story at 5:00 PM, Legal treated the embargo as no longer valid. A side discussion prepared the response, and Legal gave a “GO” at 5:19 PM.
 - **personal** and **social accounts** then confirmed the merger before the official 6:00 PM embargo.
 
-Key failures: Legal’s 5:19 PM decision, use of side channels, and weak system controls that did not prevent early release.
+Key failures: Legal's 5:19 PM decision, use of side channels, and weak system controls that did not prevent early release.
 
 ## 4. Task 2: Typical Behaviour vs. Release Behaviour
 ### 4.1 Message Volume and Channel Shift
@@ -493,9 +410,9 @@ communication_tbl %>%
   geom_text(aes(label = percent(pct, 1)), position = position_stack(.5), size = 3.5) +
   scale_y_continuous(labels = percent) +
   labs(
-    title = "Communication shifted towards side-channel coordination",
-    subtitle = "Share of messages by communication type across crisis stages",
-    x = NULL, y = "Share of messages", fill = NULL
+    title = "Channel Mix by Stage",
+    x = NULL,
+    y = "Share of messages"
   ) +
   theme_minimal(base_size = 13) +
   theme(legend.position = "bottom")
@@ -525,7 +442,7 @@ plot_actor_heatmap <- function(actor_name) {
     geom_text(aes(label = ifelse(n == 0, "", n)), size = 4) +
     scale_fill_gradient(low = "#fff4f8", high = "#eb5e8d") +
     labs(
-      title = paste("Channel use by", actor_name),
+      title = str_remove(actor_name, "-Agent"),
       x = "Channel",
       y = NULL,
       fill = "Messages"
@@ -591,8 +508,7 @@ ggplot(term_shift, aes(x = stage, y = rate, fill = term_group)) +
   geom_col(position = "dodge") +
   scale_y_continuous(labels = scales::percent_format()) +
   labs(
-    title = "Sensitive language became abnormal during the release window",
-    subtitle = "Compared with normal behaviour, deal and embargo terms became more visible near the premature release",
+    title = "Sensitive Language by Stage",
     x = NULL,
     y = "Share of messages",
     fill = "Language type"
@@ -636,8 +552,7 @@ ggplot(warning_daily, aes(x = day, y = n, fill = warning_type)) +
   geom_col() +
   scale_x_date(date_labels = "%d %b", date_breaks = "3 days") +
   labs(
-    title = "Warning signals accumulated before the breach",
-    subtitle = "Sensitive language, side huddles and weaker public channels increased before Legal's 5:19 PM GO",
+    title = "Warning Signals before Breach",
     x = NULL,
     y = "Number of warning signals",
     fill = "Warning type"
@@ -645,6 +560,84 @@ ggplot(warning_daily, aes(x = day, y = n, fill = warning_type)) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
 ```
 
-This chart shows that the breach was predictable. Warning signals did not appear only at the moment of release. They built up earlier through sensitive language, side huddles, and personal or anonymous posting behaviour. The sharp increase near 5 June shows that communication was already moving away from normal, even before Legal’s "GO" at 5:19 PM.
+This chart shows that the breach was predictable. Warning signals did not appear only at the moment of release. They built up earlier through sensitive language, side huddles, and personal or anonymous posting behaviour. The sharp increase near 5 June shows that communication was already moving away from normal, even before Legal's "GO" at 5:19 PM.
 
+### 5.2 Messages after Judge's 3:08 PM warning
+Judge gave a clear warning at 3:08 PM. The following analysis checks what happened after that warning and before the 6:00 PM formal embargo lift.
+
+```{r}
+#| code-fold: true
+post_warning <- communication_tbl %>%
+  filter(
+    timestamp > ymd_hms("2046-06-05 15:08:00"),
+    timestamp < ymd_hms("2046-06-05 18:00:00")
+  )
+
+post_warning_summary <- post_warning %>%
+  count(channel, prohibited_signal, name = "messages")
+
+post_warning_summary %>%
+  filter(prohibited_signal == TRUE) %>%
+  ggplot(aes(x = reorder(channel, messages), y = messages)) +
+  geom_col(fill = "#eb5e8d") +
+  coord_flip() +
+  labs(
+    title = "Post-warning Sensitive Signals",
+    x = NULL,
+    y = "Number of messages"
+  )
+```
+
+After Judge's 3:08 PM warning, embargo-sensitive messages still appeared before the formal 6:00 PM release. This suggests that Judge acted more like an advisory warning system than a hard control that could stop publication.
+
+### 5.3 Public posts after the warning
+
+```{r}
+#| echo: false
+post_warning %>%
+  filter(public_channel == TRUE) %>%
+  select(timestamp, agent_label, channel, prohibited_signal) %>%
+  arrange(timestamp) %>%
+  knitr::kable(
+    caption = "Public posts after Judge's 3:08 PM warning and before 6:00 PM clearance"
+  )
+```
+
+This table shows that Judge's warning **did not fully stop** public signals. After the 3:08 PM warning, public posts continued, and some still included embargo-sensitive content before the 6:00 PM clearance. This supports the fact from 5.2 about not being a strict control. The team treated these early signs as manageable, and only shifted into release mode after Legal's 5:19 PM "GO".
+
+### Task 3 Answer
+Yes, there were leading indicators that the release was possible.
+
+The main warning signs were:
+
+- **Sensitive** words increased before the breach, especially deal, embargo and crisis.
+- **Side huddles** became more active, showing that sensitive coordination was moving away from normal channels.
+- **Personal and anonymous** public posts appeared before the formal 6:00 PM release.
+- Judge gave a warning at 3:08 PM, but embargo-sensitive communication still continued after that.
+
+There were also earlier signs of unusual behaviour. Some public posts after the warning included embargo-sensitive content, especially from **Legal and Social Manager**. This showed that the system was already acting in a release-like before the official clearance.
+
+These earlier signals were treated as manageable issues, not reasons to stop. Judge could warn the team, but could not block actions. So when *SaltWind* published the story and Legal gave the 5:19 PM "GO", there were no strong controls left to prevent the premature release.
+
+## 6. Conclusion and Recommendations
+### 6.1 Final Conclusion
+The evidence suggests that the embargo breach was mainly **a system breakdown under pressure**, not a pre-planned leak.
+
+The timeline and causal visuals show how pressure built up from privacy concerns, media scrutiny, merger urgency and weak controls. During the final hour, SaltWind's 5:00 PM story triggered Legal's 5:19 PM "GO", leading to public merger confirmation before the formal 6:00 PM release.
+
+The behaviour visuals also show that this was not normal. Legal moved from internal adviser to release authoriser, while Social Manager helped push the message out. Personal and anonymous accounts became part of the release process.
+
+Overall, TenantThread's system became fragile under pressure. The final release was deliberate at that moment, but it happened because controls were weak, poor roles, and the system could warn issues but not stop them.
+
+### 6.2 Recommendations for Visual Analytics 
+A useful visual analytics system for CivicLoom's legal team should include:
+
+1. **Embargo timeline monitor**
+Tracks key events, severity and release milestones on one timeline, making it easier see how pressure built up before the breach.
+2. **Actor-channel monitor**
+Shows how each actor uses different channels over time, especially shifts into side huddles, personal posts and anonymous posts.
+3. **Sensitive language tracker**
+Detects increases in deal, embargo and prohibited-release terms before the official release time.
+4. **Judge warning effectiveness view**
+Compares the warning time with later messages and public posts, to check whether risky signalling continued.
 
