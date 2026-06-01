@@ -103,7 +103,7 @@ round_tbl %>%
          percent_change, market_sentiment, n_communications) %>%
   mutate(event_headline = str_trunc(event_headline, 45)) %>%
   knitr::kable(
-    caption = "Full Cleaned MC1 Timeline Data",
+    caption = "Cleaned MC1 Timeline Data",
     digits = 2
   )
 ```
@@ -640,4 +640,9 @@ Shows how each actor uses different channels over time, especially shifts into s
 Detects increases in deal, embargo and prohibited-release terms before the official release time.
 4. **Judge warning effectiveness view**
 Compares the warning time with later messages and public posts, to check whether risky signalling continued.
+
+## 7. References
+
+- [Vast Challenge 2026: Mini Challenge 1](https://vast-challenge.github.io/2026/MC1.html)
+- [R for Visual Analytics](https://r4va.netlify.app/)
 

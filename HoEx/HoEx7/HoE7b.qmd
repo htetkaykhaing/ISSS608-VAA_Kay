@@ -1,0 +1,101 @@
+---
+title: "Hands-on Exercise 7b: Visualising and Analysing Text Data with R: tidytext methods"
+author: "Htet Kay Khaing"
+date: "May 31, 2026"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  warning: false
+  freeze: true
+---
+
+## 7.1 Learning Outcome
+In this chapter, we will visualise and analyse text data using R.
+
+By the end of this chapter, we will be able to:
+
+- understand tidytext framework for processing, analysing and visualising text data,
+- write function for importing multiple files into R,
+- combine multiple files into a single data frame,
+- clean and wrangle text data by using tidyverse approach,
+- visualise words with Word Cloud,
+- compute term frequency–inverse document frequency (TF-IDF) using tidytext method, and
+- visualising texts and terms relationship.
+
+## 7.2 Getting Started
+### 7.2.1 Installing and launching R packages
+In this chapter, the following R packages for handling, processing, wrangling, analysing and visualising text data will be used:
+
+- tidytext, tidyverse (mainly readr, purrr, stringr, ggplot2)
+- widyr,
+- wordcloud and ggwordcloud,
+- textplot (required igraph, tidygraph and ggraph, )
+- DT,
+- lubridate and hms.
+
+The code chunk:
+```{r}
+pacman::p_load(tidytext, widyr, wordcloud, DT, ggwordcloud, textplot, lubridate, hms,
+tidyverse, tidygraph, ggraph, igraph)
+```
+
+## 7.3 Importing Multiple Text Files from Multiple Folders
+### 7.3.1 Creating a folder list
+```{r}
+news20 <- "chap29/data/20news/"
+```
+
+### 7.3.2 Define a function to read all files from a folder into a data frame
+```{r}
+read_folder <- function(infolder) {
+  tibble(file = dir(infolder, 
+                    full.names = TRUE)) %>%
+    mutate(text = map(file, 
+                      read_lines)) %>%
+    transmute(id = basename(file), 
+              text) %>%
+    unnest(text)
+}
+```
+
+## 7.4 Importing Multiple Text Files from Multiple Folders
+### 7.4.1 Reading in all the messages from the 20news folder
+```{r}
+raw_text <- tibble(folder = 
+                     dir(news20, 
+                         full.names = TRUE)) %>%
+  mutate(folder_out = map(folder, 
+                          read_folder)) %>%
+  unnest(cols = c(folder_out)) %>%
+  transmute(newsgroup = basename(folder), 
+            id, text)
+write_rds(raw_text, "data/rds/news20.rds")
+```
+
+::: {.callout-note title="Things to learn from the code chunk above"}
+
+- [`read_lines()`](https://readr.tidyverse.org/reference/read_lines.html) of {**readr**](https://readr.tidyverse.org/) package is used to read up to n_max lines from a file.
+- [`map()`](https://purrr.tidyverse.org/reference/map.html) of [**purrr**](https://purrr.tidyverse.org/) package is used to transform their input by applying a function to each element of a list and returning an object of the same length as the input.
+- [`unnest()`](https://tidyr.tidyverse.org/reference/nest.html) of **dplyr** package is used to flatten a list-column of data frames back out into regular columns.
+- [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) of **dplyr** is used to add new variables and preserves existing ones;
+- [`transmute()`](https://dplyr.tidyverse.org/reference/mutate.html) of **dplyr** is used to add new variables and drops existing ones.
+- [`read_rds()`](https://readr.tidyverse.org/reference/read_rds.html) is used to save the extracted and combined data frame as rds file for future use.
+
+:::
+
+## 7.5 Initial EDA
+Figure below shows the frequency of messages by newsgroup.
+
+
+
+The code chunk:
+```{r}
+raw_text <- news20
+raw_text %>%
+  group_by(newsgroup) %>%
+  summarize(messages = n_distinct(id)) %>%
+  ggplot(aes(messages, newsgroup)) +
+  geom_col(fill = "lightblue") +
+  labs(y = NULL)
+```
