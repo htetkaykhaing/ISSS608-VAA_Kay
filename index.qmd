@@ -1,5 +1,82 @@
 ---
-title: "ISSS608-VAA_Htet_Kay_Khaing"
+title: ""
+format:
+  html: 
+    toc: false
+page-layout: full
 ---
 
-**Welcome to ISSS608 Visual Analytics and Application!**
+::: {.hero-card}
+# Htet Kay Khaing
+
+*Postgraduate Student, Master of IT in Business (Data Science and Analytics), Singapore Management University*
+
+Welcome to **KayVerse**, my Visual Analytics portfolio for ISSS608. This site documents my learning journey through hands-on exercises and coursework, with a focus on data visualisation, analytical storytelling, and communicating insights clearly through design.
+:::
+
+## About This Portfolio
+
+This portfolio showcases my work in applying visual analytics methods using **R**, **ggplot2**, **Quarto**, and related tools. Across the course, I explore different ways to visualise data, communicate insights, and design more effective visualisations.
+
+```{r, echo=FALSE}
+pacman::p_load(tidyverse, yaml, knitr, dplyr, purrr)
+
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
+files <- list.files(".", pattern = "\\.qmd$", recursive = TRUE, full.names = TRUE)
+
+get_meta <- function(path) {
+  lines <- readLines(path, warn = FALSE)
+  if (length(lines) < 3 || lines[1] != "---") return(NULL)
+  
+  end <- which(lines[-1] == "---")[1] + 1
+  if (is.na(end)) return(NULL)
+  
+  yml_text <- paste(lines[2:(end - 1)], collapse = "\n")
+  meta <- yaml::yaml.load(yml_text)
+  
+  date_raw <- meta$date %||% NA_character_
+  
+  date_parsed <- suppressWarnings(as.Date(date_raw, format = "%Y-%m-%d"))
+  
+  if (is.na(date_parsed)) {
+    date_parsed <- suppressWarnings(as.Date(date_raw, format = "%B %d, %Y"))
+  }
+  
+  if (is.na(date_parsed)) {
+    date_parsed <- suppressWarnings(
+      as.Date(gsub("\\.", "", date_raw), format = "%B %d %Y")
+    )
+  }
+  
+  tibble(
+    path = path,
+    href = sub("\\.qmd$", ".html", path),
+    title = meta$title %||% basename(path),
+    date = date_parsed
+  )
+}
+
+latest <- purrr::map_dfr(files, get_meta) %>%
+  tidyr::drop_na(date) %>%
+  dplyr::arrange(desc(date)) %>%
+  dplyr::slice_head(n = 3)
+```
+
+## Latest Exercises
+
+```{r, echo=FALSE, results='asis'}
+for (i in seq_len(nrow(latest))) {
+  cat(
+    "<div style='padding:16px; margin-bottom:14px; border:1px solid #f3d6e3; border-radius:16px; background:#fff9fc;'>",
+    "<div style='font-size:0.9em; color:#9a7b87; margin-bottom:6px;'>", format(latest$date[i], "%d %b %Y"), "</div>",
+    "<div style='font-size:1.1em; font-weight:700; margin-bottom:4px;'><a href='", latest$href[i], "' style='text-decoration:none;'>", latest$title[i], "</a></div>",
+    "</div>",
+    sep = ""
+  )
+}
+```
+
+## Connect with Me
+
+[Email](mailto:htetkaykhaing@gmail.com) · [LinkedIn](https://www.linkedin.com/in/htetkay-khaing/) · [GitHub](https://github.com/htetkaykhaing)

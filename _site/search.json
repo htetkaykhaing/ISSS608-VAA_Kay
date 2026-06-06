@@ -954,9 +954,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS608-VAA_Htet_Kay_Khaing",
+    "title": "Htet Kay Khaing",
     "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Application!"
+    "text": "Postgraduate Student, Master of IT in Business (Data Science and Analytics), Singapore Management University\nWelcome to KayVerse, my Visual Analytics portfolio for ISSS608. This site documents my learning journey through hands-on exercises and coursework, with a focus on data visualisation, analytical storytelling, and communicating insights clearly through design."
   },
   {
     "objectID": "TakeHome/TakeHome1/TakeHome1.html",
@@ -1041,5 +1041,26 @@
     "title": "Take-home Exercise 1",
     "section": "10. References",
     "text": "10. References\n\nR for Visual Analytics\nMendeley Data motor insurance portfolio dataset\nggridge\nggdist"
+  },
+  {
+    "objectID": "index.html#about-this-portfolio",
+    "href": "index.html#about-this-portfolio",
+    "title": "Htet Kay Khaing",
+    "section": "About This Portfolio",
+    "text": "About This Portfolio\nThis portfolio showcases my work in applying visual analytics methods using R, ggplot2, Quarto, and related tools. Across the course, I explore different ways to visualise data, communicate insights, and design more effective visualisations."
+  },
+  {
+    "objectID": "index.html#latest-exercises",
+    "href": "index.html#latest-exercises",
+    "title": "Htet Kay Khaing",
+    "section": "Latest Exercises",
+    "text": "Latest Exercises\n\n\n31 May 2026\n\n\nHands-on Exercise 7b: Visualising and Analysing Text Data with R: tidytext methods\n\n\n\n\n30 May 2026\n\n\nHands-on Exercise 7a: Modelling, Visualising and Analysing Network Data with R\n\n\n\n\n26 May 2026\n\n\nTake-home Exercise 2"
+  },
+  {
+    "objectID": "index.html#connect-with-me",
+    "href": "index.html#connect-with-me",
+    "title": "Htet Kay Khaing",
+    "section": "Connect with Me",
+    "text": "Connect with Me\nEmail · LinkedIn · GitHub"
   }
 ]

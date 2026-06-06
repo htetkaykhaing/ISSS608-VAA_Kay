@@ -1,6 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Asap:wght@400;500;600;700&display=swap');
 
 /* main text */
+.hero-card {
+  background: linear-gradient(135deg, #fff9fc 0%, #fff4f8 100%);
+  border: 1px solid #f3d6e3;
+  border-radius: 24px;
+  padding: 30px 34px;
+  margin: 20px 0 30px 0;
+  box-shadow: 0 6px 18px rgba(212, 106, 146, 0.10);
+}
+
 body,
 p,
 li
