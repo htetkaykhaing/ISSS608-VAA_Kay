@@ -602,13 +602,6 @@
     "text": "1.12 Reference\n\nHadley Wickham (2023) ggplot2: Elegant Graphics for Data Analysis. Online 3rd edition.\nWinston Chang (2013) R Graphics Cookbook 2nd edition. Online version.\nHealy, Kieran (2019) Data Visualization: A practical introduction. Online version\nLearning ggplot2 on Paper – Components\nLearning ggplot2 on Paper – Layer\nLearning ggplot2 on Paper – Scale"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About the Author\nHello, Thank you for visiting KayVerse. I’m Htet Kay Khaing.\nI am currently Postgraduate Student from Master of IT in Business (Data Science and Analytics) at Singapore Management University. This portfolio reflects my progress in applying visual analytics methods to explore data, communicate insights clearly, and design more effective visualisations.\n\n\nConnect with Me\n\nEmail: htetkaykhaing@gmail.com\nLinkedIn: https://www.linkedin.com/in/htetkay-khaing/\nGitHub: https://github.com/htetkaykhaing"
-  },
-  {
     "objectID": "HoEx/HoEx2/HoE2.html",
     "href": "HoEx/HoEx2/HoE2.html",
     "title": "Hands-on Exercise 2 - Beyond ggplot2 Fundamentals",
@@ -959,6 +952,27 @@
     "text": "Postgraduate Student, Master of IT in Business (Data Science and Analytics), Singapore Management University\nWelcome to KayVerse, my Visual Analytics portfolio for ISSS608. This site documents my learning journey through hands-on exercises and coursework, with a focus on data visualisation, analytical storytelling, and communicating insights clearly through design."
   },
   {
+    "objectID": "index.html#about-this-portfolio",
+    "href": "index.html#about-this-portfolio",
+    "title": "Htet Kay Khaing",
+    "section": "About This Portfolio",
+    "text": "About This Portfolio\nThis portfolio showcases my work in applying visual analytics methods using R, ggplot2, Quarto, and related tools. Across the course, I explore different ways to visualise data, communicate insights, and design more effective visualisations."
+  },
+  {
+    "objectID": "index.html#latest-exercises",
+    "href": "index.html#latest-exercises",
+    "title": "Htet Kay Khaing",
+    "section": "Latest Exercises",
+    "text": "Latest Exercises\n\n\n31 May 2026\n\n\nHands-on Exercise 7b: Visualising and Analysing Text Data with R: tidytext methods\n\n\n\n\n30 May 2026\n\n\nHands-on Exercise 7a: Modelling, Visualising and Analysing Network Data with R\n\n\n\n\n26 May 2026\n\n\nTake-home Exercise 2"
+  },
+  {
+    "objectID": "index.html#connect-with-me",
+    "href": "index.html#connect-with-me",
+    "title": "Htet Kay Khaing",
+    "section": "Connect with Me",
+    "text": "Connect with Me\nEmail · LinkedIn · GitHub"
+  },
+  {
     "objectID": "TakeHome/TakeHome1/TakeHome1.html",
     "href": "TakeHome/TakeHome1/TakeHome1.html",
     "title": "Take-home Exercise 1",
@@ -1041,26 +1055,5 @@
     "title": "Take-home Exercise 1",
     "section": "10. References",
     "text": "10. References\n\nR for Visual Analytics\nMendeley Data motor insurance portfolio dataset\nggridge\nggdist"
-  },
-  {
-    "objectID": "index.html#about-this-portfolio",
-    "href": "index.html#about-this-portfolio",
-    "title": "Htet Kay Khaing",
-    "section": "About This Portfolio",
-    "text": "About This Portfolio\nThis portfolio showcases my work in applying visual analytics methods using R, ggplot2, Quarto, and related tools. Across the course, I explore different ways to visualise data, communicate insights, and design more effective visualisations."
-  },
-  {
-    "objectID": "index.html#latest-exercises",
-    "href": "index.html#latest-exercises",
-    "title": "Htet Kay Khaing",
-    "section": "Latest Exercises",
-    "text": "Latest Exercises\n\n\n31 May 2026\n\n\nHands-on Exercise 7b: Visualising and Analysing Text Data with R: tidytext methods\n\n\n\n\n30 May 2026\n\n\nHands-on Exercise 7a: Modelling, Visualising and Analysing Network Data with R\n\n\n\n\n26 May 2026\n\n\nTake-home Exercise 2"
-  },
-  {
-    "objectID": "index.html#connect-with-me",
-    "href": "index.html#connect-with-me",
-    "title": "Htet Kay Khaing",
-    "section": "Connect with Me",
-    "text": "Connect with Me\nEmail · LinkedIn · GitHub"
   }
 ]
