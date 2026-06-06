@@ -562,7 +562,7 @@ ggplot(warning_daily, aes(x = day, y = n, fill = warning_type)) +
 
 This chart shows that the breach was predictable. Warning signals did not appear only at the moment of release. They built up earlier through sensitive language, side huddles, and personal or anonymous posting behaviour. The sharp increase near 5 June shows that communication was already moving away from normal, even before Legal's "GO" at 5:19 PM.
 
-### 5.2 Messages after Judge's 3:08 PM warning
+### 5.2 Messages after Judge's 3:08 PM warning {#judge-warning}
 Judge gave a clear warning at 3:08 PM. The following analysis checks what happened after that warning and before the 6:00 PM formal embargo lift.
 
 ```{r}
@@ -603,7 +603,7 @@ post_warning %>%
   )
 ```
 
-This table shows that Judge's warning **did not fully stop** public signals. After the 3:08 PM warning, public posts continued, and some still included embargo-sensitive content before the 6:00 PM clearance. This supports the fact from 5.2 about not being a strict control. The team treated these early signs as manageable, and only shifted into release mode after Legal's 5:19 PM "GO".
+This table shows that Judge's warning **did not fully stop** public signals. After the 3:08 PM warning, public posts continued, and some still included embargo-sensitive content before the 6:00 PM clearance. This supports the fact from [Section 5.2](#judge-warning) about not being a strict control. The team treated these early signs as manageable, and only shifted into release mode after Legal's 5:19 PM "GO".
 
 ### Task 3 Answer
 Yes, there were leading indicators that the release was possible.
