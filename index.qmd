@@ -5,6 +5,7 @@ format:
     toc: false
 page-layout: full
 ---
+![](banner.png){width=70% fig-align="center"}
 
 ::: {.hero-card}
 # Htet Kay Khaing

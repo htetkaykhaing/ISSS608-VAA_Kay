@@ -37,6 +37,8 @@ website:
         href: "HoEx/HoEx7/HoE7a.qmd"
       - text: "Hands-on Exercise 7b: Visualising and Analysing Text Data with R: tidytext methods"
         href: "HoEx/HoEx7/HoE7b.qmd"
+      - text: "Hands-on Exercise 8: Visualising and Analysing Time-oriented Data"
+        href: "HoEx/HoEx8/HoE8.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
