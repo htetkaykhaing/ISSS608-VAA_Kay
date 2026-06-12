@@ -273,57 +273,35 @@ ggplot() +
 ```
 
 ## 8.5 Plotting Slopegraph
+In this section we will learn how to plot a [slopegraph](https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph) by using R.
 
-In this section, we will explore how to create a **slopegraph** in R. A slopegraph is useful for comparing how values change between two time points across multiple categories. In this example, I use rice yield data to compare changes between **1961** and **1980** for selected Asian countries.
+Before getting started, make sure that **CGPfunctions** has been installed and loaded onto R environment. Then, refer to [Using newggslopegraph](https://cran.r-project.org/web/packages/CGPfunctions/vignettes/Using-newggslopegraph.html) to learn more about the function. Lastly, read more about `newggslopegraph()` and its arguments by referring to this [link](https://www.rdocumentation.org/packages/CGPfunctions/versions/0.6.3/topics/newggslopegraph).
+
+```{r}
+#| code-fold: true
+remotes::install_github("haleyjeppson/ggmosaic")
+remotes::install_github("ibecav/CGPfunctions")
+library(CGPfunctions)
+```
 
 ### 8.5.1 Step 1: Data Import
-First, import the rice data set into the R environment.
-
+Import the rice data set into R environment by using the code chunk below.
 ```{r}
 rice <- read_csv("data/rice.csv")
 ```
 
-### 8.5.2 Step 2: Preparing the data
-Next, filter the data to keep only the two years of interest, namely 1961 and 1980.
+### 8.5.2 Step 2: Plotting the slopegraph
+Next, code chunk below will be used to plot a basic slopegraph as shown below.
 ```{r}
-rice_slope <- rice %>%
+rice %>% 
   mutate(Year = factor(Year)) %>%
-  filter(Year %in% c(1961, 1980))
+  filter(Year %in% c(1961, 1980)) %>%
+  newggslopegraph(Year, Yield, Country,
+                Title = "Rice Yield of Top 11 Asian Counties",
+                SubTitle = "1961-1980",
+                Caption = "Prepared by: Htet Kay Khaing")
 ```
 
-### 8.5.3 Step 3: Plotting the slopegraph
-The code chunk below creates a basic slopegraph by using ggplot2.
-```{r}
-#| code-fold: true
-ggplot(rice_slope,
-       aes(x = Year, y = Yield, group = Country)) +
-  geom_line(aes(color = Country), linewidth = 1) +
-  geom_point(aes(color = Country), size = 2) +
-  geom_text(
-    data = rice_slope %>% filter(Year == 1961),
-    aes(label = Country),
-    hjust = 1.1,
-    size = 3,
-    show.legend = FALSE
-  ) +
-  geom_text(
-    data = rice_slope %>% filter(Year == 1980),
-    aes(label = Country),
-    hjust = -0.1,
-    size = 3,
-    show.legend = FALSE
-  ) +
-  scale_x_discrete(expand = expansion(mult = c(0.2, 0.2))) +
-  labs(
-    title = "Rice Yield of Top 11 Asian Countries",
-    subtitle = "1961-1980",
-    caption = "Prepared by: Htet Kay Khaing",
-    x = NULL,
-    y = "Yield"
-  ) +
-  theme_minimal() +
-  theme(
-    legend.position = "none"
-  )
-```
-
+::: {.callout-tip title="Thing to learn from the code chunk above"}
+For effective data visualisation design, `factor()` is used convert the value type of *Year* field from numeric to factor.
+:::
