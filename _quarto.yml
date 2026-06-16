@@ -39,6 +39,8 @@ website:
         href: "HoEx/HoEx7/HoE7b.qmd"
       - text: "Hands-on Exercise 8: Visualising and Analysing Time-oriented Data"
         href: "HoEx/HoEx8/HoE8.qmd"
+      - text: "Hands-on Exercise 9a: Choropleth Mapping with R"
+        href: "HoEx/HoEx9/HoE9a.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
