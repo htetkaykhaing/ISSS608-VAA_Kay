@@ -41,6 +41,8 @@ website:
         href: "HoEx/HoEx8/HoE8.qmd"
       - text: "Hands-on Exercise 9a: Choropleth Mapping with R"
         href: "HoEx/HoEx9/HoE9a.qmd"
+      - text: "Hands-on Exercise 9b: Visualising Geospatial Point Data"
+        href: "HoEx/HoEx9/HoE9b.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
