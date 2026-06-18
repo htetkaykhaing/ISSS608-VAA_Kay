@@ -43,6 +43,8 @@ website:
         href: "HoEx/HoEx9/HoE9a.qmd"
       - text: "Hands-on Exercise 9b: Visualising Geospatial Point Data"
         href: "HoEx/HoEx9/HoE9b.qmd"
+      - text: "Hands-on Exercise 9c: Analytical Mapping"
+        href: "HoEx/HoEx9/HoE9c.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
