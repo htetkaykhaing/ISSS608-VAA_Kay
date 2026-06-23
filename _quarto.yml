@@ -45,6 +45,8 @@ website:
         href: "HoEx/HoEx9/HoE9b.qmd"
       - text: "Hands-on Exercise 9c: Analytical Mapping"
         href: "HoEx/HoEx9/HoE9c.qmd"
+      - text: "Hands-on Exercise 10: Information Dashboard Design: R methods"
+        href: "HoEx/HoEx10/HoE10.qmd"
     - text: "Take-home Exercise"
       menu:
       - text: "Take-home Exercise 1"
