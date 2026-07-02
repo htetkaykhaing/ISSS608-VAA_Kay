@@ -53,9 +53,15 @@ website:
         href: "TakeHome/TakeHome1/TakeHome1.qmd"
       - text: "Take-home Exercise 2"
         href: "TakeHome/TakeHome2/TakeHome2.qmd"
+    - text: "Visual Analytics Project"
+      href: "https://isss608-2526apr-g1.vercel.app/"
     right:
-      - href: index.qmd
-        text: Home
+      - icon: envelope
+        href: "mailto:htetkaykhaing@gmail.com"
+      - icon: github
+        href: "https://github.com/htetkaykhaing/"
+      - icon: linkedin
+        href: "https://www.linkedin.com/in/htetkay-khaing/"
 
 format:
   html:
